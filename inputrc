@@ -1,0 +1,5 @@
+#
+# inputrc for readline applications.  The defaults are pretty good,
+# but for some reason, the fucking bell goes off all the time.
+
+set bell-style none

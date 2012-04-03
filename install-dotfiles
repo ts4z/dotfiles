@@ -1,0 +1,64 @@
+#!/bin/sh
+# -*- ksh -*-
+
+if [ -z "${HOME}" ]; then
+  echo "\$HOME not set.  I can't guess where you hid the git repository."
+  exit 1
+fi
+
+for dir in "$HOME"/git/dotfiles "`pwd`" ; do
+  if [ -z "$cvsdir" -a -d "$dir" ]; then
+    cvsdir="$dir"
+    echo "repository dotfiles directory is $cvsdir"
+  fi
+done
+
+if [ -z "$cvsdir" ]; then
+  echo "Unable to deduce the repository."
+  exit 0;
+fi
+
+cd "${HOME}"
+# /bin/ls -1 | egrep -v '^(CVS|installdotfiles)$' | sed 's/$/ \\/'
+for dotfile in \
+ Xclients \
+ Xmodmap-pc104 \
+ Xresources \
+ bash_logout \
+ bash_profile \
+ bashrc \
+ fvwm2rc \
+ gdbinit \
+ guile \
+ inputrc \
+ screenrc \
+ tcshrc \
+ xinitrc \
+ xsession \
+ ; do
+  echo -n "${dotfile}: "
+  # 1.  blow away old links
+  # -L is a link on bash; -h is on FreeBSD /bin/sh?
+  # -h seems to work on bash
+  if [ -h ".${dotfile}" ]; then
+    echo -n "removing old link, "
+    rm ".${dotfile}"
+  fi
+
+  # 2.  move aside old file
+  if [ -e ".${dotfile}" ]; then
+    echo -n "moving file to ${dotfile}.old, "
+    mv ".${dotfile}" "${dotfile}.old"
+  fi
+
+  # 3.  install new link
+  echo -n "installing link, "
+  ln -s "${cvsdir}/${dotfile}" ".${dotfile}"
+
+  if test "#!" = "`head -1 \"${cvsdir}/${dotfile}\" | cut -c1-2`"  ; then
+    echo -n "making executable, "
+    chmod +x "${cvsdir}/${dotfile}"
+  fi
+
+  echo "done."
+done

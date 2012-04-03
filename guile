@@ -1,0 +1,16 @@
+;;;; guile -- personal guile configuration. -*- scheme -*-
+
+;;;
+;;;
+;;;
+
+(define-module (guile-user))
+
+;; modules:
+;; readline: make the repl prompt do readline support like all good software
+;; history: make the repl prompt store and number previous evaluations
+;;	    like gdb
+
+(use-modules (ice-9 readline))
+(use-modules (ice-9 history))
+(activate-readline)

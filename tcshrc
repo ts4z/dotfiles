@@ -1,0 +1,170 @@
+#
+# tjs .tcshrc
+# 
+# You are more than welcome to copy anything you like.
+#
+# There are a few tcsh specific things in here.
+#
+
+# Check for '.' on the current path and remove it if it is there.
+# (It's a security hole waiting to happen.)  Thank you, John.
+set workpath = ( )
+foreach dir ( $path )
+  if ( $dir == '.' ) then
+     echo "WARNING: Removed '.' from path.  Perhaps your login program sucks."
+  else if ( ! -e $dir ) then
+     # empty directory dropped.
+     # it helps to know that some login binaries change empty to "." which
+     # is where most of the defaulting to "." in path comes from.
+  else
+     set workpath = ( $workpath $dir )
+  endif
+end
+set path = ( $workpath )
+
+if ($?prompt) then # (until end of file) prompt set only if interactive
+
+# Andrewize.
+if (-e /usr/local/bin/global.cshrc) then
+	source /usr/local/lib/global.cshrc
+endif
+
+#
+# Terminal Sanity
+#
+
+#stty intr  # COME ON, SGI.  IT'S THE NINETIES.
+#stty erase  # This works great until you telnet to a VAX running VMS.
+
+#
+# Set variables.  Many are tcsh specific.
+# Prompt is set at bottom of file.
+#
+
+set autoexpand=1 # expand histories with tab for editing
+set fignore="~ .o"
+set histlit
+set history=100 #mmm, history
+set linklists # make ls-F builtin do Right Thing
+set nobeep # shut UP, will you, shut UP
+set notify
+set prompt2="[%R]: "			# [foreach]: 
+set prompt3='[DWIM] "%R"? [yNe]: '	# [DWIM] "ls"? [yNe]: 
+set rmstar
+set savehist=50
+
+unset ignoreeof  # Andrew bastards.
+unset autologout # Andrew bastards.
+
+#
+# Alias insulation.
+#
+
+# Andrew-specific: Attempt to cover up some nasty vendor programs
+if (-e /usr/contributed) then
+	set cd=$PWD
+	cd /usr/contributed
+	# some vendors ship a really shitty patch
+	alias patch		/usr/contributed/bin/patch
+	cd $cd
+	unset $cd
+endif
+
+alias .		echo "Dot read by shell as a command."
+alias ..	cd ..
+alias asc	find /usr/pub/ascii /usr/share/misc/ascii | xargs cat
+alias cdl	"cd /afs/andrew/system/src/local/\!:1"
+alias cdc	"cd /afs/andrew/system/src/contributed/\!:1"
+alias cdcc	"cd /afs/andrew/system/src/\!:1"
+alias cdo		cd \`print-cdo\`\!:\* # Ew.
+alias chpj		'echo >~/.project '
+alias cls		clear
+alias eighty	echo "01234567890123456789012345678901234567890123456789012345678901234567890123456789"
+alias fi		finger
+if (-e /usr/contributed/bin/gtar) then
+	# It's likely that tar isn't gtar.  Alias tar to be gtar.
+	alias tar gtar
+else
+	# Probably Linux, which may not have gtar but that's ok because tar is
+	# holy. Avoid typos.
+	alias gtar tar
+endif
+alias gz		gzip
+alias j			jobs -l
+alias kia		kinit
+alias kla		klog
+alias l			less
+alias ls		ls-F
+alias nox		"(unsetenv DISPLAY; \!:*)"
+alias plupdate		source ~/.plan.update
+alias qq		print -q -P
+if (-e /afs/andrew.cmu.edu/usr13/tjs/afs) then
+	alias qw		fs lq /afs/andrew.cmu.edu/usr13/tjs/afs/
+endif
+alias reconf \
+'foreach file (`find . -name configure.in | sed s/configure.in//`) ; \
+  (cd $file ; autoconf) \
+  end'
+alias rmpl		"egrep \!:1 ~/.logins/* | cut -d: -f1 | xargs rm; plupdate"
+alias r13		tr a-zA-Z n-za-mN-ZA-M # rot 13 isn't everywhere
+alias startmon		'\
+   /usr/snap3/etc/tsvlook $HOME/etc/mon.cfg | tjstsvmon &;\
+   /usr/snap3/etc/tsvlcmuedu $HOME/etc/medu.cfg | tjstsvmon &;\
+   /usr/snap3/etc/tsvlafs $HOME/etc/mams.cfg | tjstsvmon &;'
+alias shit "find . -name core -o -name \*.core -o \! -name '.' \( -type d -prune -name '.' \) | xargs rm -f"
+#alias shit		'rm core'
+alias sutn		su \!:1 -c \""/usr/local/bin/telnet -a \!:2*"\"
+alias title		'echo -n "]0;\!*"'
+# xterm aliases -- basics
+alias xexec		xterm -T \\\"\!:\*\\\" -e \!:\* \&
+# now in technicholor
+alias xe		xterm -bg slategrey -fg white -T \"\!:\*\" -e \!:\* \&
+alias xred		xterm -bg firebrick4 -fg white -T \
+				\"\[WARNING\] \!:\*\" -e \!:\* \&
+alias xyellow		xterm -bg yellow -fg black -T \"\!:\*\" -e \!:\* \&
+alias xpine	xterm -fg white -bg \#000055 -cr orange -T pine -e pine \&
+alias xtn		xtelnet
+alias whos		whois
+alias zless		'zcat \!* | less'
+
+# For the ++ counter
+alias zdq		'zwrite zephyrdaemon.plusplus -i plusplus -m \!*'
+alias zdr		'zwrite zephyrdaemon.plusplus -i restart -m ""'
+alias zdrl              'zwrite zephyrdaemon.plusplus -i reload -m ""'
+
+# Zephyr aliases.
+alias zao		'zwrite -c aphio -i '
+alias zf		'zwrite -c flame -i '
+alias zfh		'zwrite -c flame -i help'
+alias zh		'zwrite -c hacker -i '
+alias zhgny		'zwrite -c hacker -i "gratuitous name yelling"'
+alias zi		'zwrite -i '
+alias zkgb		'zwrite -i kgb'
+alias zse		'zwrite -i share\&enjoy'
+alias zu		'zwrite -i unhinged'
+
+alias zl		zlocate
+# regular expression punt.  helps if you have my .zwgc.desc.
+alias zrp		zctl set punt-list '`zctl show punt-list | cut -d\  -f2`":\!:*"'
+alias zkill		zrp \!:\*.\*
+alias zr		zrepeat
+alias zw		zwrite
+alias znox		'(unsetenv DISPLAY; zstart)'
+
+alias blank		'sleep 1;xscreensaver-command -activate'
+alias blank-next        'sleep 1;xscreensaver-command -next'
+
+unalias rm
+
+#
+# Set prompt.
+# this is down here so that if the prompt is not set, I know something
+# went wrong.  which is a hack, but it's csh anyway so who cares?
+#
+if (! $?SUAS) then # I'm SU'ed, change the prompt
+  set prompt='%n@%m\:%~%# '
+else
+  set prompt="[su ${SUAS}] %m\:%~%# "
+endif
+
+endif # if ($?prompt)

@@ -37,7 +37,8 @@ setopt SHARE_HISTORY
 
 DIAMOND="\\u2666"
 PROMPT="%n@%m:%~%# "
-RPROMPT='~%(3D.%(1d.APRIL FOOLS.).)~ %1(j.[%j job%2(j.s.)] .)%D{%m/%d %H:%M}'
+RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)%1(j.[%j job%2(j.s.)] .)'
+FIGNORE=.svn:~:.git
 
 # Path slicing and dicing.  Remove stupid crap from the path (relative dirs,
 # but also nonexistant dirs and duplicates, since we probably just made a
@@ -109,11 +110,10 @@ umask 22
 
 EDITOR=''
 for possible in emacsclient-nw gnuclient emacs ; do
-    if test -z "$possible" && which "$possible" >/dev/null 2>&1 ; then
+    if test -z "$EDITOR" && which "$possible" >/dev/null 2>&1 ; then
         export EDITOR="$possible"
     fi
 done
-
 
 export CVS_RSH=ssh
 export PAGER=less
@@ -150,6 +150,10 @@ fi
 
 set -o notify
 
+# see also WORDCHARS; I think / and = need to be omitted from it
+autoload -U select-word-style
+select-word-style bash
+
 #############################################################################
 #
 # LinkedIn
@@ -169,3 +173,4 @@ alias bestop="ps aux | grep 'java.*container' | grep -v 'grep' | awk '{print \$2
 # set rmstar protection from being a fuckwit.
 
 # Features I want from zsh that aren't in bash or tcsh:
+set rmstar on

@@ -37,7 +37,7 @@ setopt SHARE_HISTORY
 
 DIAMOND="\\u2666"
 PROMPT="%n@%m:%~%# "
-RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)%1(j.[%j job%2(j.s.)] .)'
+RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)%1(j.[%j job%2(j.s.)].)'
 FIGNORE=.svn:~:.git
 
 # Path slicing and dicing.  Remove stupid crap from the path (relative dirs,
@@ -174,3 +174,32 @@ alias bestop="ps aux | grep 'java.*container' | grep -v 'grep' | awk '{print \$2
 
 # Features I want from zsh that aren't in bash or tcsh:
 set rmstar on
+
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+# this is stuff from the default list on Linux
+
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+

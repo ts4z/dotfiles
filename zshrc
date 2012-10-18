@@ -9,6 +9,8 @@
 autoload -U compinit
 compinit
 
+setopt BAD_PATTERN
+
 #allow tab completion in the middle of a word
 setopt COMPLETE_IN_WORD
 
@@ -18,9 +20,9 @@ setopt COMPLETE_IN_WORD
 #setopt HUP
 
 ## history
-#setopt APPEND_HISTORY
+setopt APPEND_HISTORY
 ## for sharing history between zsh processes
-setopt INC_APPEND_HISTORY
+# setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
 ## never ever beep ever
@@ -35,9 +37,8 @@ setopt SHARE_HISTORY
 # autoload -U colors
 #colors
 
-DIAMOND="\\u2666"
-PROMPT="%n@%m:%~%# "
-RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)%1(j.[%j job%2(j.s.)] .)'
+PROMPT="%1(j.[%j job%2(j.s.)] .)%n@%m:%~%# "
+RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)'
 FIGNORE=.svn:~:.git
 
 # Path slicing and dicing.  Remove stupid crap from the path (relative dirs,
@@ -109,7 +110,7 @@ export MANPATH=`cleanpath "${MANPATH}"`
 umask 22
 
 EDITOR=''
-for possible in emacsclient-nw gnuclient emacs ; do
+for possible in emacsclient-nw gnuclient emacs xemacs ; do
     if test -z "$EDITOR" && which "$possible" >/dev/null 2>&1 ; then
         export EDITOR="$possible"
     fi
@@ -120,6 +121,12 @@ export PAGER=less
 export VISUAL="${EDITOR}"
 export FIGNORE=.svn:~:.git
 export TJS_TMPDIR="/tmp/tjs"
+export HISTFILE=$HOME/.zsh_history
+export HISTSIZE=9999
+export SAVEHIST=9999
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+
 
 ulimit -c unlimited
 
@@ -142,6 +149,7 @@ alias j=jobs
 #alias shit="find . -name core -o -name \*.core -o \! -name . \( -type d -prune \! -type d \) | xargs rm"
 alias shit="find . -maxdepth 1 \( -name core -o -name \*.core \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
+alias open=xdg-open             # don't do this on a Mac
 
 # argh.  redhat %!^@#&.
 if alias rm 2>/dev/null ; then
@@ -153,6 +161,16 @@ set -o notify
 # see also WORDCHARS; I think / and = need to be omitted from it
 autoload -U select-word-style
 select-word-style bash
+
+# from jflorenc
+function gn
+{
+    start=`date +%s`
+    "$@"
+    end=`date +%s`
+    elapsed=$((end - start))
+    /usr/bin/notify-send "Finished" "Job completed: $*\n\nat `date`, run for ${elapsed}s"
+}
 
 #############################################################################
 #

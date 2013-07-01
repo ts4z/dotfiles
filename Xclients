@@ -1,0 +1,56 @@
+#!/bin/sh
+# -*- ksh -*-
+
+#
+# Xclients file for tjs
+#
+
+# This file is intended to run on multiple systems with differing
+# configurations, including multiple display depths and multiple heads.
+
+#HOSTNAME=`hostname`
+ARCHTYPE=`uname -m`
+
+# Attempt to guess how we want to correct the keymap.  This is highly
+# variable because there's no real way to detect what kind of keyboard is
+# connected in a fairly portable fashion.
+case "$ARCHTYPE" in
+  i[3456]86) # probably identifies itself as an i386
+	     # this file might be right, but it sort of depends
+	     xmodmap ~/.Xmodmap-pc104
+	     ;;
+esac
+
+#if which cronme >/dev/null ; then
+  # Fire off a cron job to make sure we've got all our wacky up-to-date data.
+  # cronme
+#fi
+
+if true; then
+  # do nothing: disabled
+  false
+
+elif which xplanetbg >/dev/null ; then
+  # Old xplanetbg invocation syntax.
+  # used to be -observer 80,0 instead of longitude -80
+  nice -20 xplanetbg -blend -label -labelpos -0-0 -markers 		\
+   -markerfile "${TJS_CVS}"/xplanet/pit-sjc -longitude -80 		\
+   -proj mercator -color white -cloud_image /tmp/tjs/clouds_2000.jpg &
+
+elif which xplanet >/dev/null ; then
+  # probably the new version of xplanet with the wildly incompatible
+  # and incomplete argument syntax.  This relies on config turds strewn
+  # throughout my account.
+  nice -20 xplanet -labelpos -0-35 -conf default -long -80 -proj mercator -color white
+
+elif which xearth >/dev/null ; then
+  # Found an xearth.  I used to try and figure out the settings
+  # semi-dynamically based on hostname and stuff, but that's not very relevant
+  # right now.  Let's do things the easy way for now.
+  # nice round one: xearthopts="-pos fixed/25/-60" ;;
+
+  xearth -markerfile ~/cvs/xplanet/pit-sjc -label -ncol 1024 \
+   -pos fixed/25/-60 -nice 20 -night 20 -bigstars 10 &
+fi
+
+#eof

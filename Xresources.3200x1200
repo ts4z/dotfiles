@@ -1,0 +1,14 @@
+!
+! -*- xrdb -*-
+! X resources for bigger display.
+			
+#define FONT_14_TT	-*-lucidatypewriter-medium-r-*-*-14-*-*-*-*-*-*-*
+#define FONT_14_TT_BOLD	-*-lucidatypewriter-bold-r-*-*-14-*-*-*-*-*-*-*
+
+rxvt*font:			FONT_14_TT
+xterm*font:			FONT_14_TT
+xterm*boldFont: 		FONT_14_TT_BOLD
+Emacs.default.attributeFont: 	FONT_14_TT
+
+Emacs*menubar*fontList: -*-lucida-medium-r-*-*-14-*-*-*-*-*-*-*
+Emacs*menubar*font: -*-lucida-medium-r-*-*-14-*-*-*-*-*-*-*

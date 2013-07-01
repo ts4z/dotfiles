@@ -1,0 +1,11 @@
+! -*- xrdb -*-
+! X resources for big display.
+!
+			
+#define FONT_12_TT	-*-lucidatypewriter-medium-r-*-*-12-*-*-*-*-*-*-*
+#define FONT_12_TT_BOLD	-*-lucidatypewriter-medium-b-*-*-12-*-*-*-*-*-*-*
+
+rxvt*font:			FONT_12_TT
+xterm*font:			FONT_12_TT
+xterm*boldFont: 		FONT_12_TT_BOLD
+XEmacs.default.attributeFont: 	FONT_12_TT

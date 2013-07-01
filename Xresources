@@ -1,0 +1,85 @@
+!
+! Xresources
+! tjs
+!
+
+! This used to work.  (The bastards.)
+Netscape*blinkingEnabled:       false
+
+! Noseguy.program:                fortune -o
+tclock.minute.middle.radius:    5
+tclock.minute.middle.offset:    30
+tclock.geometry:                -8+0
+tclock.secondhand:		no
+tclock.tick.size:		0
+
+! spellcast*name:                 breakout:m
+! xmirrors*name:                  Tim
+! Xmris.Up:                       Up
+! Xmris.Down:                     Down
+! Xmris.Left:                     Left
+! Xmris.Right:                    Right
+! XPostit*Background:             white
+! XPostit.bufSize:                2048
+! XPostit.geometry:               43x43+1016-0
+! XPostit.saveNotes:              false
+! XPostit.scrollBar:              true
+
+! no 8-bit chars please, esc prefix my metas
+xterm*eightBitInput: 	false
+
+xterm*saveLines: 	15000
+xterm*foreground:       white
+! xterm*background:       SteelBlue4
+xterm*background:       #000044
+!xterm*cursorColor:      OrangeRed1
+xterm*cursorColor:      orange
+xterm*rightScrollBar:   true
+xterm*scrollBar:        true
+
+! xterm*font:             -schumacher-clean-medium-r-*-*-12-*-*-*-*-*-iso8859-*
+! xterm*font:             -*-lucidatypewriter-medium-r-*-*-10-*-*-*-*-*-*-*
+! xterm*boldFont:         -*-lucidatypewriter-bold-r-*-*-10-*-*-*-*-*-*-*
+! These remain off for now.  They look like shit, and I prefer underlining/bold
+! to color changes.
+
+! these SUCK
+xterm*colorBDMode:	FALSE
+xterm*colorULMode:	FALSE
+xterm*underLine:	TRUE
+
+
+! zwatch.columns:                 4
+! zwatch.AutoRefresh:             true
+! zwatch.AutoPlace:               true
+! zwatch.DisallowNormalQuitAndIUnderstandTheDangersToMySanity: true
+! zwatch.MailPollSecs:            10000
+! zwatch.LocateVerbosely:         true
+! zwatch.ShowHosts:               false
+! zwatch.UseVerboseTitle:         false
+! zwatch.UseZephithets:           true
+! zwatch.WarpPointer:             true
+! zwatch.TitleFontName:           -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
+! zwatch.FontName:                -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
+! zwatch.ItemPadding:             0
+
+zwgc.reverseStack:              true
+zwgc*style.message.personal*geometry:   +0+0
+zwgc*style.mail*geometry:               -6-165
+zwgc*geometry:                          -6+0
+
+! Why are there two versions of this?  The Motif user abuse kit.
+! XEmacs*menubar*fontList: -*-helvetica-*-r-*-*-12-*-*-*-*-*-*-*
+! XEmacs*menubar*font: -*-helvetica-*-r-*-*-12-*-*-*-*-*-*-*
+
+!XEmacs*menubar*fontList: -*-lucida-medium-r-*-*-10-*-*-*-*-*-*-*
+!XEmacs*menubar*attributeFont:	-*-lucida-medium-r-*-*-10-*-*-*-*-*-*-*
+!XEmacs.default.attributeFont:    -*-lucidatypewriter-medium-r-*-*-10-*-*-*-*-*-*-*
+! XEmacs.modeline.attributeFont: -*-lucida-medium-r-*-*-10-*-*-*-*-*-*-*
+
+xscreensaver*splash: false
+
+! this stuff is for Xft-enabled Emacs; it will not work if the non-Xft
+! version is used
+Emacs.font: Monospace-9
+Emacs.FontBackend: xft

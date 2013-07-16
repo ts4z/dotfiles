@@ -110,7 +110,7 @@ export MANPATH=`cleanpath "${MANPATH}"`
 umask 22
 
 EDITOR=''
-for possible in emacsclient-nw gnuclient emacs xemacs ; do
+for possible in emacsclient-nw emacsclient gnuclient emacs xemacs vi ; do
     if test -z "$EDITOR" && which "$possible" >/dev/null 2>&1 ; then
         export EDITOR="$possible"
     fi

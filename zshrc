@@ -82,11 +82,11 @@ for dir in \
  /usr/local \
  /usr/local/share \
  ; do
-  MANPATH="$MANPATH:${dir}/man"
 done
 for dir in \
  "$HOME" \
  "$HOME"/local \
+ "$HOME"/opt/scala \
  /usr/local \
  /usr/local/X11R6 \
  /usr/local/kde/bin \
@@ -172,6 +172,18 @@ function gn
     /usr/bin/notify-send "Finished" "Job completed: $*\n\nat `date`, run for ${elapsed}s"
 }
 
+# convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
+function gmtime  
+{
+    perl -we 'map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
+}
+
+# convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
+function localtime
+{
+    perl -we 'map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
+}
+
 #############################################################################
 #
 # LinkedIn
@@ -179,6 +191,7 @@ function gn
 alias anfb='ant -Dno.full.build=true'
 alias fullclean='ant -f $LEOHOME/build.xml fullclean'
 alias bestop="ps aux | grep 'java.*container' | grep -v 'grep' | awk '{print \$2}' | xargs kill -9"
+alias lh='cd $LEOHOME'
 
 
 

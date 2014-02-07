@@ -1,4 +1,3 @@
-
 # -*- ksh -*-
 
 # .zshrc is sourced in interactive shells.
@@ -146,7 +145,6 @@ alias eighty="echo 0123456789012345678901234567890123456789012345678901234567890
 alias gz=gzip
 alias j=jobs
 alias accw="svin resolve --accept=working"
-#alias rot13="tr a-zA-Z n-za-mN-ZA-M"
 #alias shit="find . -name core -o -name \*.core -o \! -name . \( -type d -prune \! -type d \) | xargs rm"
 alias shit="find . -maxdepth 1 \( -name core -o -name \*.core \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"

@@ -148,6 +148,7 @@ alias accw="svin resolve --accept=working"
 #alias shit="find . -name core -o -name \*.core -o \! -name . \( -type d -prune \! -type d \) | xargs rm"
 alias shit="find . -maxdepth 1 \( -name core -o -name \*.core \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
+alias deep-clean='find . -name \*~ -print -exec rm {} \;'
 alias open=xdg-open             # don't do this on a Mac
 
 # argh.  redhat %!^@#&.
@@ -174,7 +175,7 @@ function gn
 # convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
 function gmtime  
 {
-    perl -we 'map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
+    perl -we 'map { print scalar(gmtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
 }
 
 # convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
@@ -187,11 +188,9 @@ function localtime
 #
 # LinkedIn
 #
-alias anfb='ant -Dno.full.build=true'
-alias fullclean='ant -f $LEOHOME/build.xml fullclean'
 alias bestop="ps aux | grep 'java.*container' | grep -v 'grep' | awk '{print \$2}' | xargs kill -9"
 alias lh='cd $LEOHOME'
-
+alias jh="cd $HOME/s/jobs_trunk"
 
 
 

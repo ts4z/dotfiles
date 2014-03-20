@@ -21,20 +21,14 @@ fi
 cd "${HOME}"
 # /bin/ls -1 | egrep -v '^(CVS|installdotfiles)$' | sed 's/$/ \\/'
 for dotfile in \
- Xclients \
- Xmodmap-pc104 \
- Xresources \
  bash_logout \
  bash_profile \
  bashrc \
- fvwm2rc \
  gdbinit \
  guile \
  inputrc \
  screenrc \
  tcshrc \
- xinitrc \
- xsession \
  ; do
   echo -n "${dotfile}: "
   # 1.  blow away old links

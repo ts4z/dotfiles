@@ -184,6 +184,13 @@ function localtime
     perl -we 'map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
 }
 
+# mangle tabs and newline characters for ad-hoc pretty-printing
+
+function nltab
+{
+    perl -pne 's/\\n/\n/g; s/\\t/\t/g; '
+}
+
 #############################################################################
 #
 # LinkedIn

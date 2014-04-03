@@ -1,4 +1,4 @@
-# -*- ksh -*-
+# -*- sh -*-
 
 # .zshrc is sourced in interactive shells.
 # It should contain commands to set up aliases,
@@ -149,7 +149,9 @@ alias accw="svin resolve --accept=working"
 alias shit="find . -maxdepth 1 \( -name core -o -name \*.core \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
-alias open=xdg-open             # don't do this on a Mac
+if [ `uname -s` != Darwin ]; then
+  alias open=xdg-open
+fi
 
 # argh.  redhat %!^@#&.
 if alias rm 2>/dev/null ; then
@@ -195,9 +197,9 @@ function nltab
 #
 # LinkedIn
 #
-alias bestop="ps aux | grep 'java.*container' | grep -v 'grep' | awk '{print \$2}' | xargs kill -9"
 alias lh='cd $LEOHOME'
 alias jh="cd $HOME/s/jobs_trunk"
+
 
 
 

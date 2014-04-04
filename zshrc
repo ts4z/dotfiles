@@ -145,7 +145,8 @@ alias gz=gzip
 alias j=jobs
 alias accw="svin resolve --accept=working"
 #alias shit="find . -name core -o -name \*.core -o \! -name . \( -type d -prune \! -type d \) | xargs rm"
-alias shit="find . -maxdepth 1 \( -name core -o -name \*.core \) -print -exec rm {} \;"
+alias shit="find . -maxdepth 1 \( -name core -o -name \*.core -o -name core.\* \) -print -exec rm {} \;"
+alias deep-shit="find . \( -name core -o -name \*.core -o -name core.\* \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
 if [ `uname -s` != Darwin ]; then

@@ -1,4 +1,4 @@
-# -*- ksh -*-
+# -*- sh -*-
 #
 # .bash_profile (aka cvs/dotfiles/bash_profile)
 # Tim Showalter
@@ -40,5 +40,58 @@ fi
 # If we got here, we have a running ssh-agent via .xsession, or something
 # is screwed up.  Oh, well, whatever, start the usual .bashrc crap.
 #
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/bin
+
+if [ -x /usr/bin/keychain ] ; then
+	MYNAME=`/usr/bin/whoami`
+	if [ -f ~/.ssh/${MYNAME}_at_linkedin.com_dsa_key ] ; then
+	      /usr/bin/keychain ~/.ssh/${MYNAME}_at_linkedin.com_dsa_key
+      	      . ~/.keychain/`hostname`-sh
+	fi
+fi
+
+##############################################################################
+# LinkedIn
+#
+
+export NETREPO=svn+ssh://svn.corp.linkedin.com/netrepo/network
+export LIREPO=svn+ssh://svn.corp.linkedin.com/lirepo
+export VENREPO=svn+ssh://svn.corp.linkedin.com/vendor
+
+export JAVA_HOME=/export/apps/jdk/JDK-1_7_0_51
+export JDK_HOME="$JAVA_HOME"
+export ORACLE_HOME=/local/instantclient_10_2
+export TNS_ADMIN=/local/instantclient_10_2
+export NLS_LANG=American_America.UTF8
+
+export LD_LIBRARY_PATH=/local/instantclient_10_2
+
+export ORACLE_SID=DB
+export PATH=$JAVA_HOME/bin:/usr/local/bin:$PATH:/usr/local/mysql/bin:$ORACLE_HOME/bin
+
+export M2_HOME=/local/maven
+export M2=$M2_HOME/bin
+
+export ANT_HOME=/local/apache-ant-1.7.1
+export ANT_OPTS="-Xms512m -Xmx2500m -XX:PermSize=256m -XX:MaxPermSize=1024m"
+
+export GRADLE_HOME=/local/gradle-1.0-milestone-3
+
+export PATH=$HOME/local/bin:/export/apps/xtools/bin:$ORACLE_HOME:$ANT_HOME/bin:$GRADLE_HOME/bin:/usr/local/linkedin/bin:$PATH
+
+export LEOHOME=/home/tshowalt/s/network.trunk/
+export QUICK_DEPLOY=/home/tshowalt/s/quick-deploy
+export ORACLE_HOME=/local/instantclient_10_2 # or wherever you have Oracle installed
+export ORACLE_SID=DB
+
+# hack for LI since it's hard to change shell here :-(
+export SHELL=/bin/zsh
+
+# 
+# end LinkedIn
+##############################################################################
 
 . "$HOME/.bashrc"

@@ -163,6 +163,7 @@ ncfinger () {
 screen () {
   echo "you meant tmux, right?"
 }
+alias em='emacsclient -c'
 
 # argh.  redhat %!^@#&.
 if alias rm 2>/dev/null ; then
@@ -208,11 +209,12 @@ function nltab
 #
 # LinkedIn
 #
+alias ah="cd $HOME/s/jobs-api_trunk"
 alias lh='cd $LEOHOME'
 alias jh="cd $HOME/s/jobs_trunk"
 alias fh="cd $HOME/s/jobs-frontend_trunk"
-alias tt="cd $HOME/s/talent_trunk"
-
+alias th="cd $HOME/s/talent_trunk"
+alias mb="mint snapshot && mint release"
 
 
 #############################################################################

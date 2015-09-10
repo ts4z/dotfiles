@@ -30,7 +30,9 @@ setopt SHARE_HISTORY
 #LISTMAX=0
 
 ## disable mail checking
-#MAILCHECK=0
+MAILCHECK=0
+unset MAIL
+unset MAILPATH
 
 # autoload -U colors
 #colors
@@ -152,6 +154,9 @@ alias deep-clean='find . -name \*~ -print -exec rm {} \;'
 if [ `uname -s` != Darwin ]; then
   alias open=xdg-open
 fi
+screen () {
+  echo "you meant tmux, right?"
+}
 
 # argh.  redhat %!^@#&.
 if alias rm 2>/dev/null ; then

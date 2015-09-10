@@ -60,8 +60,8 @@ export NETREPO=svn+ssh://svn.corp.linkedin.com/netrepo/network
 export LIREPO=svn+ssh://svn.corp.linkedin.com/lirepo
 export VENREPO=svn+ssh://svn.corp.linkedin.com/vendor
 
-export JAVA_HOME=/export/apps/jdk/JDK-1_6_0_27
-export JDK_HOME=/export/apps/jdk/JDK-1_6_0_27
+export JAVA_HOME=/export/apps/jdk/JDK-1_8_0_5
+export JDK_HOME=/export/apps/jdk/JDK-1_8_0_5
 export ORACLE_HOME=/local/instantclient_10_2
 export TNS_ADMIN=/local/instantclient_10_2
 export NLS_LANG=American_America.UTF8
@@ -82,6 +82,4 @@ export GRADLE_HOME=/local/gradle-1.0-milestone-3
 export PATH=$HOME/local/bin:/export/apps/xtools/bin:$ORACLE_HOME:$ANT_HOME/bin:$GRADLE_HOME/bin:/usr/local/linkedin/bin:$PATH
 
 export LEOHOME=/home/tshowalt/s/network.trunk/
-export QUICK_DEPLOY=/home/tshowalt/s/quick-deploy
-export ORACLE_HOME=/local/instantclient_10_2 # or wherever you have Oracle installed
 export ORACLE_SID=DB

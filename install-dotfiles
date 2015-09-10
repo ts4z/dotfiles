@@ -29,6 +29,11 @@ for dotfile in \
  inputrc \
  screenrc \
  tcshrc \
+ tmux.conf \
+ xinitrc \
+ xsession \
+ zprofile \
+ zshrc \
  ; do
   echo -n "${dotfile}: "
   # 1.  blow away old links

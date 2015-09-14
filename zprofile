@@ -6,6 +6,7 @@
 # If we are running under XDM, skip the chatty crap.
 if [ -z "$XDMRUNNING" ]; then
   (
+  echo "/*"
   if [ -x /usr/games/fortune ]; then
     if [ -f /etc/redhat-release ]; then
       # can't run fortune -a -- redhat broke it.
@@ -14,7 +15,8 @@ if [ -z "$XDMRUNNING" ]; then
       fortune -a
     fi
   fi
-  ) | perl -pne 's/^/-- /'
+  echo "*/"
+  ) 
 fi
 
 #

@@ -1,4 +1,4 @@
-# -*- ksh -*-
+# -*- sh -*-
 #
 
 # Source global definitions

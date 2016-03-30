@@ -1,9 +1,10 @@
 #!/bin/sh
 # -*- ksh -*-
 
-# shitty /bin/sh on MacOS doesn't honor -n
+# on my shiny new Mac, /bin/sh doesn't honor the -n flag
+# this is why we can't have nice things
 echo () {
-    /bin/echo "$@"
+  /bin/echo "$@"
 }
 
 if [ -z "${HOME}" ]; then

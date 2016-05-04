@@ -44,7 +44,7 @@ FIGNORE=.svn:~:.git
 # Path slicing and dicing.  Remove stupid crap from the path (relative dirs,
 # but also nonexistant dirs and duplicates, since we probably just made a
 # bunch of those).  This is hard to do in Bourne shell, so I resort to
-# a perl hairball called whackpath.  If that can't be found we use
+# a perl hairball called whackpath.  If that can't be found, we don't.
 cleanpath ()
 {
   for dir in "$HOME/cvs/bin" "$HOME/cvs-tjs/bin" ; do
@@ -143,6 +143,7 @@ rot13 () {
 
 alias cls=clear
 alias eighty="echo 01234567890123456789012345678901234567890123456789012345678901234567890123456789"
+alias eightyn="(eighty; cat >/dev/null)"
 alias gz=gzip
 alias j=jobs
 alias accw="svin resolve --accept=working"
@@ -151,6 +152,7 @@ alias shit="find . -maxdepth 1 -type f \( -name core -o -name \[0-9\]\*.core -o 
 alias deep-shit="find . -type f \( -name core -o -name \[0-9\]\*.core -o -name core.\*\[0-9\] \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
+
 if [ `uname -s` != Darwin ]; then
   alias open=xdg-open
 fi
@@ -205,18 +207,13 @@ function nltab
 alias lh='cd $LEOHOME'
 alias jh="cd $HOME/s/jobs_trunk"
 alias fh="cd $HOME/s/jobs-frontend_trunk"
-
+alias tt="cd $HOME/s/talent_trunk"
 
 
 
 #############################################################################
 
-# Features I want from tcsh that aren't in bash:
-# !-whatever-tab should expand out the history on the readline.
-# ... although C-r is so close I don't miss this.
-# set rmstar protection from being a fuckwit.
-
-# Features I want from zsh that aren't in bash or tcsh:
+# oh, rmstar, how I've missed you
 set rmstar on
 
 HISTSIZE=1000
@@ -234,7 +231,9 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
+if which dircolors >& /dev/null ; then
+    eval "$(dircolors -b)"
+fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s

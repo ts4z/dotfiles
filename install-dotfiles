@@ -1,6 +1,11 @@
 #!/bin/sh
 # -*- ksh -*-
 
+# shitty /bin/sh on MacOS doesn't honor -n
+echo () {
+    /bin/echo "$@"
+}
+
 if [ -z "${HOME}" ]; then
   echo "\$HOME not set.  I can't guess where you hid the git repository."
   exit 1

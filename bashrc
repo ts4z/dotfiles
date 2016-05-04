@@ -1,6 +1,11 @@
 # -*- ksh -*-
 #
 
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
 # Path slicing and dicing.  Remove stupid crap from the path (relative dirs,
 # but also nonexistant dirs and duplicates, since we probably just made a
 # bunch of those).  This is hard to do in Bourne shell, so I resort to
@@ -77,6 +82,7 @@ else
 fi
 export PAGER=less
 export VISUAL="${EDITOR}"
+export FIGNORE=.svn:~:.git
 export TJS_TMPDIR="/tmp/tjs"
 if [ -d "${HOME}/cvs-tjs" ]; then
   export TJS_CVS="${HOME}/cvs-tjs"
@@ -128,6 +134,18 @@ if [ -d "$HOME/cvs/lib/bash-startup" ]; then
     fi
   done
 fi
+
+#############################################################################
+#
+# LinkedIn
+#
+alias anfb='ant -Dno.full.build=true'
+alias fullclean='ant -f $LEOHOME/build.xml fullclean'
+alias bestop="ps aux | grep 'java.*container' | grep -v 'grep' | awk '{print \$2}' | xargs kill -9"
+alias activate-tools-dev="source $HOME/.virtualenvs/linkedin/bin/activate"
+
+
+#############################################################################
 
 # Features I want from tcsh that aren't in bash:
 # !-whatever-tab should expand out the history on the readline.

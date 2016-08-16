@@ -35,7 +35,6 @@ for dotfile in \
  screenrc \
  tcshrc \
  tmux.conf \
- xinitrc \
  xsession \
  zprofile \
  zshrc \

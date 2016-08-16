@@ -71,19 +71,9 @@ export LD_LIBRARY_PATH=/local/instantclient_10_2
 
 export ORACLE_SID=DB
 export PATH=$JAVA_HOME/bin:/usr/local/bin:$PATH:/usr/local/mysql/bin:$ORACLE_HOME/bin
-
-export M2_HOME=/local/maven
-export M2=$M2_HOME/bin
-
-export ANT_HOME=/local/apache-ant-1.7.1
-export ANT_OPTS="-Xms512m -Xmx2500m -XX:PermSize=256m -XX:MaxPermSize=1024m"
-
-export GRADLE_HOME=/local/gradle-1.0-milestone-3
-
-export PATH=$HOME/local/bin:/export/apps/xtools/bin:$ORACLE_HOME:$ANT_HOME/bin:$GRADLE_HOME/bin:/usr/local/linkedin/bin:$PATH
+export PATH=$HOME/local/bin:/export/apps/xtools/bin:$ORACLE_HOME:/usr/local/linkedin/bin:/export/content/linkedin/bin:$PATH
 
 export LEOHOME=/home/tshowalt/s/network.trunk/
-export QUICK_DEPLOY=/home/tshowalt/s/quick-deploy
 export ORACLE_HOME=/local/instantclient_10_2 # or wherever you have Oracle installed
 export ORACLE_SID=DB
 

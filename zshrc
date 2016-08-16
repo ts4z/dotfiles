@@ -210,11 +210,14 @@ function nltab
 # LinkedIn
 #
 alias ah="cd $HOME/s/jobs-api_trunk"
+alias cfh="cd $HOME/s/cap-frontend_trunk"
 alias lh='cd $LEOHOME'
 alias jh="cd $HOME/s/jobs_trunk"
 alias fh="cd $HOME/s/jobs-frontend_trunk"
+alias jfh="cd $HOME/s/jobs-frontend_trunk"
 alias th="cd $HOME/s/talent_trunk"
 alias mb="mint snapshot && mint release"
+alias ebh="cd $HOME/s/jobs-ea-backend_trunk"
 
 
 #############################################################################
@@ -251,4 +254,3 @@ zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-

@@ -156,6 +156,10 @@ alias deep-clean='find . -name \*~ -print -exec rm {} \;'
 if [ `uname -s` != Darwin ]; then
   alias open=xdg-open
 fi
+# nobody seems to have finger installed anymore.
+ncfinger () {
+    echo "$1" | cut -d@ -f1 | nc `echo $1 | cut -d@ -f2` 79
+}
 screen () {
   echo "you meant tmux, right?"
 }

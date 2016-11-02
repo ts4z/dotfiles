@@ -187,16 +187,20 @@ function gn
 }
 
 # convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
+# with no args, just print the local time.
 function gmtime  
 {
-    perl -we 'map { print scalar(gmtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
+    perl -we 'if (!@ARGV) { push @ARGV, time } map { print scalar(gmtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
 }
 
 # convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
+# with no args, just print the local time.
 function localtime
 {
-    perl -we 'map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
+    perl -we 'if (!@ARGV) { push @ARGV, time } map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
 }
+
+alias epochtime='date +%s'
 
 # mangle tabs and newline characters for ad-hoc pretty-printing
 

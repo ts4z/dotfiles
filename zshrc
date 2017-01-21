@@ -152,6 +152,7 @@ alias shit="find . -maxdepth 1 -type f \( -name core -o -name \[0-9\]\*.core -o 
 alias deep-shit="find . -type f \( -name core -o -name \[0-9\]\*.core -o -name core.\*\[0-9\] \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
+alias tmuxa='tmux a || tmux'
 
 if [ `uname -s` != Darwin ]; then
   alias open=xdg-open
@@ -161,7 +162,7 @@ ncfinger () {
     echo "$1" | cut -d@ -f1 | nc `echo $1 | cut -d@ -f2` 79
 }
 screen () {
-  echo "you meant tmux, right?"
+    echo "you meant tmux, right?"
 }
 alias em='emacsclient -c'
 

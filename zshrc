@@ -87,9 +87,10 @@ for dir in \
  "$HOME" \
  "$HOME"/local \
  "$HOME"/opt/scala \
+ /opt/likewise \
  /usr/local \
  /usr/local/X11R6 \
- /usr/local/kde/bin \
+ /usr/local/kde \
  /usr/games \
  /bin \
  /usr \
@@ -153,6 +154,8 @@ alias deep-shit="find . -type f \( -name core -o -name \[0-9\]\*.core -o -name c
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
 alias tmuxa='tmux a || tmux'
+alias pwgen='dd if=/dev/urandom bs=15 count=1 status=none | base64'
+alias safe-pwgen='pwgen | tr + _'
 
 if [ `uname -s` != Darwin ]; then
   alias open=xdg-open

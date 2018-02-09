@@ -140,6 +140,7 @@ for dir in \
  "$HOME" \
  "$HOME"/local \
  "$HOME"/opt/scala \
+ "$HOME"/go \
  /opt/likewise \
  /usr/local \
  /usr/local/X11R6 \

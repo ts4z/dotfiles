@@ -77,13 +77,7 @@ for dir in \
   PATH="$PATH:$dir"
 done
 for dir in \
- /usr \
- /usr/share \
- /usr/local \
- /usr/local/share \
- ; do
-done
-for dir in \
+ "$HOME"/go \
  "$HOME" \
  "$HOME"/local \
  "$HOME"/opt/scala \
@@ -213,23 +207,6 @@ function nltab
     perl -pne 's/\\n/\n/g; s/\\t/\t/g; '
 }
 
-#############################################################################
-#
-# LinkedIn
-#
-alias ah="cd $HOME/s/jobs-api_trunk"
-alias cfh="cd $HOME/s/cap-frontend_trunk"
-alias lh='cd $LEOHOME'
-alias jh="cd $HOME/s/jobs_trunk"
-alias fh="cd $HOME/s/jobs-frontend_trunk"
-alias jfh="cd $HOME/s/jobs-frontend_trunk"
-alias th="cd $HOME/s/talent_trunk"
-alias mb="mint snapshot && mint release"
-alias ebh="cd $HOME/s/jobs-ea-backend_trunk"
-
-
-#############################################################################
-
 # oh, rmstar, how I've missed you
 set rmstar on
 
@@ -237,9 +214,13 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.zsh_history
 
-# Use modern completion system
-autoload -Uz compinit
-compinit
+if [ -f ~/.zshrc_local ]; then
+    source ~/.zshrc_local
+fi
+
+if which kubectl >/dev/null 2>&1 ; then
+    source <(kubectl completion zsh)
+fi
 
 # this is stuff from the default list on Linux
 

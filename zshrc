@@ -58,7 +58,7 @@ set_prompt_git_vars ()
     local maybe=$(current_git_branch)
     if [[ "$maybe" != '' ]]; then
         local dirty=''
-        if ! git diff --quiet 2>/dev/null ; then
+        if [[ -n $(git status -s 2>&1) ]] ; then
             dirty='*'
         fi
         prompt_git_branch=" ($maybe$dirty)"

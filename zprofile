@@ -3,7 +3,10 @@
 #
 
 # If we are running under XDM, skip the chatty crap.
-if [ -z "$XDMRUNNING" ]; then
+#
+# If we are running on Mac, every shell is a login shell,
+# and this is annoying.
+if [ -z "$XDMRUNNING" -a `uname` != Darwin ]; then
     (
         echo "/*"
 

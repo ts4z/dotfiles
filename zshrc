@@ -4,8 +4,12 @@
 # .zshrc for ts4z
 #
 
-autoload -U compinit
-compinit
+if [ `id -u` -ne 0 ]; then
+    # Disabled, because on some hosts (like my Mac) I own the shell dirs and
+    # this upsets zsh for reasonable security reasons.
+    autoload -U compinit
+    compinit
+fi
 
 setopt BAD_PATTERN
 
@@ -37,7 +41,44 @@ unset MAILPATH
 # autoload -U colors
 #colors
 
-PROMPT="%1(j.[%j job%2(j.s.)] .)%n@%m:%~%# "
+prompt_nat='%n@'
+case `whoami` in
+    timshowalter|tjs)
+        prompt_nat='' ;;
+    *) ;;
+esac
+
+current_git_branch() {
+    git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+set_prompt_git_vars ()
+{
+    prompt_git_branch=''
+    local maybe=$(current_git_branch)
+    if [[ "$maybe" != '' ]]; then
+        local dirty=''
+        if ! git diff --quiet 2>/dev/null ; then
+            dirty='*'
+        fi
+        prompt_git_branch=" ($maybe$dirty)"
+    fi
+}
+
+reset_prompt() {
+    PROMPT="%1(j.[%j job%2(j.s.)] .)${prompt_nat}%m %50<...<%B%~%b${prompt_git_branch}%<<%# "
+}
+
+if [ `id -u` != 0 ]; then
+    precmd_functions=(
+        set_prompt_git_vars
+        reset_prompt
+    )
+else
+    # just do this once, we're root, we don't need to screw around
+    reset_prompt
+fi
+
 RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)'
 FIGNORE=.svn:~:.git
 
@@ -136,10 +177,12 @@ rot13 () {
     fi
 }
 
+alias brawl='brew update && brew upgrade && brew cleanup && brew cask outdated' 
 alias cls=clear
 alias eighty="echo 01234567890123456789012345678901234567890123456789012345678901234567890123456789"
 alias eightyn="(eighty; cat >/dev/null)"
 alias gz=gzip
+alias k=kubectl
 alias j=jobs
 alias accw="svin resolve --accept=working"
 #alias shit="find . -name core -o -name \*.core -o \! -name . \( -type d -prune \! -type d \) | xargs rm"
@@ -148,8 +191,9 @@ alias deep-shit="find . -type f \( -name core -o -name \[0-9\]\*.core -o -name c
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
 alias tmuxa='tmux a || tmux'
-alias pwgen='dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64'
-alias safe-pwgen='pwgen | tr + _'
+# trash both + and / as they don't cut and paste well.
+# not optimal, but pretty good.
+alias pwgen='dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64 | tr +/ __'
 
 if [ `uname -s` != Darwin ]; then
   alias open=xdg-open
@@ -218,8 +262,14 @@ if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local
 fi
 
-if which kubectl >/dev/null 2>&1 ; then
-    source <(kubectl completion zsh)
+# this is fine, but do we get this for free with a reasonable
+# kubectl install?
+#if which kubectl >/dev/null 2>&1 ; then
+#    source <(kubectl completion zsh)
+#fi
+
+if which direnv >/dev/null ; then
+    eval "$(direnv hook zsh)"
 fi
 
 # this is stuff from the default list on Linux

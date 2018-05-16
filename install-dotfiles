@@ -32,22 +32,30 @@ if [ -z "$cvsdir" ]; then
 fi
 
 cd "${HOME}"
-# /bin/ls -1 | egrep -v '^(CVS|installdotfiles)$' | sed 's/$/ \\/'
+# /bin/ls -1 | egrep -v '^(README.md|CVS|install-dotfiles)$' | sed 's/$/ \\/'
 for dotfile in \
- bash_logout \
- bash_profile \
- bashrc \
- gdbinit \
- gitconfig \
- guile \
- inputrc \
- screenrc \
- tcshrc \
- tmux.conf \
- xsession \
- zprofile \
- zshrc \
- ; do
+Xclients \
+Xresources \
+Xresources.1280x1024 \
+Xresources.1600x1200 \
+Xresources.2560x1024 \
+Xresources.3200x1200 \
+bash_logout \
+bash_profile \
+bashrc \
+fvwm2rc \
+gdbinit \
+gitconfig \
+guile \
+inputrc \
+screenrc \
+tcshrc \
+tmux.conf \
+xinitrc \
+xsession \
+zprofile \
+zshrc \
+               ; do
   echo -n "${dotfile}: "
 
   # 0.  Check for override; ignore if so

@@ -65,20 +65,22 @@ set_prompt_git_vars ()
         fi
         local rev_on=''
         local rev_off=''
-        if [[ -n $(git status -s 2>&1) ]] ; then
+        local git_status=$(git status -s 2>&1)
+        if [[ -n "$git_status" ]] ; then
             # workspace is dirty (uncommitted file OR unpushed change)
-            local star=''
-            if git diff HEAD --quiet ; then
-                # we are clean, but we have untracked files
-                star='☢'
+            local stars=''
+            if echo "$git_status" | grep -q '??' ; then
+                stars='☢'
             else
+            fi
+            if ! git diff HEAD --quiet ; then
                 # we are not consistent with HEAD; add a *
-                star='✻'
+                stars="${stars}✻"
             fi
             #rev_on="%S "
             #rev_off=" %s"
         fi
-        prompt_git_branch=' '"$rev_on($branch)$star$rev_off"
+        prompt_git_branch=' '"$rev_on($branch)$stars$rev_off"
     fi
 }
 

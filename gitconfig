@@ -1,0 +1,10 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Tim Showalter
+	email = tjs@psaux.com
+
+[alias]
+        st = status
+        du = diff origin/master
+        up = pull --rebase

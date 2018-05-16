@@ -1,6 +1,9 @@
 #!/bin/sh
 # -*- ksh -*-
 
+set -e
+set -o pipefail
+
 # on my shiny new Mac, /bin/sh doesn't honor the -n flag
 # this is why we can't have nice things
 echo () {
@@ -31,6 +34,7 @@ for dotfile in \
  bash_profile \
  bashrc \
  gdbinit \
+ gitconfig \
  guile \
  inputrc \
  screenrc \

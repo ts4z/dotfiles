@@ -50,9 +50,10 @@ for dotfile in \
  ; do
   echo -n "${dotfile}: "
 
+  # 0.  Check for override; ignore if so
   if test -e ."$dotfile" ; then
       if head -3 ."$dotfile" | grep -q "$save" ; then
-          echo "exists and is marked with $save; skip."
+          echo "exists, and is marked to keep; skip."
           continue
       fi
   fi

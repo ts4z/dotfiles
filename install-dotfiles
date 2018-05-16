@@ -4,13 +4,17 @@
 set -e
 set -o pipefail
 
+# files containing this string in the first 3 lines will
+# be left alone.
+save="install-dotfiles-ignore"
+
 # on my shiny new Mac, /bin/sh doesn't honor the -n flag
 # this is why we can't have nice things
 echo () {
   /bin/echo "$@"
 }
 
-if [ -z "${HOME}" ]; then
+if [ -z "$HOME" ]; then
   echo "\$HOME not set.  I can't guess where you hid the git repository."
   exit 1
 fi
@@ -45,6 +49,14 @@ for dotfile in \
  zshrc \
  ; do
   echo -n "${dotfile}: "
+
+  if test -e ."$dotfile" ; then
+      if head -3 ."$dotfile" | grep -q "$save" ; then
+          echo "exists and is marked with $save; skip."
+          continue
+      fi
+  fi
+
   # 1.  blow away old links
   # -L is a link on bash; -h is on FreeBSD /bin/sh?
   # -h seems to work on bash

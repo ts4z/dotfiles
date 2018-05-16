@@ -61,18 +61,24 @@ set_prompt_git_vars ()
             # "master" is too long and too common; abbreviate
             # (consider an emoji tree if OSX Emacs restores support
             # for them.)
-            branch='⧳'
+            branch='⍟' # other interesting characters: ⎈⍟⧳⋮
         fi
+        local rev_on=''
+        local rev_off=''
         if [[ -n $(git status -s 2>&1) ]] ; then
             # workspace is dirty (uncommitted file OR unpushed change)
             local star=''
-            if ! git diff HEAD --quiet ; then
+            if git diff HEAD --quiet ; then
+                # we are clean, but we have untracked files
+                star='☢'
+            else
                 # we are not consistent with HEAD; add a *
                 star='✻'
             fi
-            branch="%S $branch$star %s"
+            #rev_on="%S "
+            #rev_off=" %s"
         fi
-        prompt_git_branch=' '"$branch"
+        prompt_git_branch=' '"$rev_on($branch)$star$rev_off"
     fi
 }
 

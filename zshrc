@@ -41,7 +41,7 @@ unset MAILPATH
 # autoload -U colors
 #colors
 
-prompt_nat='%n@'
+prompt_nat='%S%n%s@'
 case `whoami` in
     timshowalter|tjs)
         prompt_nat='' ;;
@@ -55,18 +55,29 @@ current_git_branch() {
 set_prompt_git_vars ()
 {
     prompt_git_branch=''
-    local maybe=$(current_git_branch)
-    if [[ "$maybe" != '' ]]; then
-        local dirty=''
-        if [[ -n $(git status -s 2>&1) ]] ; then
-            dirty='*'
+    local branch=$(current_git_branch)
+    if [[ "$branch" != '' ]]; then
+        if [ "$branch" = master ]; then
+            # "master" is too long and too common; abbreviate
+            # (consider an emoji tree if OSX Emacs restores support
+            # for them.)
+            branch='⧳'
         fi
-        prompt_git_branch=" ($maybe$dirty)"
+        if [[ -n $(git status -s 2>&1) ]] ; then
+            # workspace is dirty (uncommitted file OR unpushed change)
+            local star=''
+            if ! git diff HEAD --quiet ; then
+                # we are not consistent with HEAD; add a *
+                star='✻'
+            fi
+            branch="%S $branch$star %s"
+        fi
+        prompt_git_branch=' '"$branch"
     fi
 }
 
 reset_prompt() {
-    PROMPT="%1(j.[%j job%2(j.s.)] .)${prompt_nat}%m %50<...<%B%~%b${prompt_git_branch}%<<%# "
+    PROMPT="%1(j.[%j job%2(j.s.)] .)%B${prompt_nat}%m%b %42<…<%~${prompt_git_branch}%<< %# "
 }
 
 if [ `id -u` != 0 ]; then

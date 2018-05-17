@@ -71,7 +71,6 @@ set_prompt_git_vars ()
             local stars=''
             if echo "$git_status" | grep -q '??' ; then
                 stars='☢'
-            else
             fi
             if ! git diff HEAD --quiet ; then
                 # we are not consistent with HEAD; add a *

@@ -1,10 +1,21 @@
-# This is Git's per-user configuration file. tjs-save
+# .gitconfig
+
 [user]
 # Please adapt and uncomment the following lines:
 	name = Tim Showalter
 	email = tjs@psaux.com
 
 [alias]
-        st = status
+        # "all log"
+        al = log --graph --all
+        br = branch
+        co = checkout
         du = diff origin/master
+        freshen = !git commit --amend --date=`date +%s` --no-edit
+        # Push BRanch to origin; set upstream of this branch to point to that one
+        pbr = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+        prune-remote=remote prune origin
+        # "short log"
+        sl = log --graph --all --oneline
+        st = status
         up = pull --rebase

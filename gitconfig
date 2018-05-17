@@ -1,7 +1,6 @@
 # .gitconfig
 
 [user]
-# Please adapt and uncomment the following lines:
 	name = Tim Showalter
 	email = tjs@psaux.com
 

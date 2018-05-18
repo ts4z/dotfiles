@@ -7,7 +7,7 @@
 #
 
 # Check for '.' on the current path and remove it if it is there.
-# (It's a security hole waiting to happen.)  Thank you, John.
+# (It's a security hole waiting to happen.)  Thank you, Katherine.
 set workpath = ( )
 foreach dir ( $path )
   if ( $dir == '.' ) then

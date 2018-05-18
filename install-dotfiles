@@ -45,6 +45,7 @@ bashrc \
 fvwm2rc \
 gdbinit \
 gitconfig \
+git-global-ignore \
 guile \
 inputrc \
 screenrc \

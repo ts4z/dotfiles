@@ -1,0 +1,4 @@
+# global .gitignore
+# needs .gitconfig support to work
+
+*~

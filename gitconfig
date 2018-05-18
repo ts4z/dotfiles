@@ -1,5 +1,8 @@
 # .gitconfig
 
+[core]
+        excludesFile = ~/.git-global-ignore
+
 [user]
 	name = Tim Showalter
 	email = tjs@psaux.com
@@ -18,3 +21,6 @@
         sl = log --graph --all --oneline
         st = status
         up = pull --rebase
+
+[include]
+        path = ~/.gitconfig-local

@@ -10,8 +10,8 @@ save="install-dotfiles-ignore"
 
 # on my shiny new Mac, /bin/sh doesn't honor the -n flag
 # this is why we can't have nice things
-echo () {
-  /bin/echo "$@"
+echon () {
+  /bin/echo -n "$@"
 }
 
 if [ -z "$HOME" ]; then
@@ -19,8 +19,8 @@ if [ -z "$HOME" ]; then
   exit 1
 fi
 
-for dir in "$HOME"/git/dotfiles "`pwd`" ; do
-  if [ -z "$cvsdir" -a -d "$dir" ]; then
+for dir in "$HOME"/git/dotfiles "$(pwd)" ; do
+  if [ -z "$cvsdir" ] && [ -d "$dir" ]; then
     cvsdir="$dir"
     echo "repository dotfiles directory is $cvsdir"
   fi
@@ -28,7 +28,7 @@ done
 
 if [ -z "$cvsdir" ]; then
   echo "Unable to deduce the repository."
-  exit 0;
+  exit 0
 fi
 
 cd "${HOME}"
@@ -56,7 +56,7 @@ xsession \
 zprofile \
 zshrc \
                ; do
-  echo -n "${dotfile}: "
+  echon "${dotfile}: "
 
   # 0.  Check for override; ignore if so
   if test -e ."$dotfile" ; then
@@ -70,23 +70,23 @@ zshrc \
   # -L is a link on bash; -h is on FreeBSD /bin/sh?
   # -h seems to work on bash
   if [ -h ".${dotfile}" ]; then
-    echo -n "removing old link, "
+    echon "removing old link, "
     rm ".${dotfile}"
   fi
 
   # 2.  move aside old file
   if [ -e ".${dotfile}" ]; then
-    echo -n "moving file to ${dotfile}.old, "
-    mv ".${dotfile}" "${dotfile}.old"
+    echon "moving file to ${dotfile}.old, "
+    mv ".$dotfile" "${dotfile}.old"
   fi
 
   # 3.  install new link
-  echo -n "installing link, "
-  ln -s "${cvsdir}/${dotfile}" ".${dotfile}"
+  echon "installing link, "
+  ln -s "$cvsdir/$dotfile" ".$dotfile"
 
-  if test "#!" = "`head -1 \"${cvsdir}/${dotfile}\" | cut -c1-2`"  ; then
-    echo -n "making executable, "
-    chmod +x "${cvsdir}/${dotfile}"
+  if test "#!" = "$(head -1 "$cvsdir/$dotfile" | cut -c1-2)"  ; then
+    echon "making executable, "
+    chmod +x "$cvsdir/$dotfile"
   fi
 
   echo "done."

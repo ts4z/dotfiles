@@ -6,7 +6,7 @@ set -o pipefail
 
 # files containing this string in the first 3 lines will
 # be left alone.
-save="install-dotfiles-ignore"
+save="install-dotfiles-preserve"
 
 # on my shiny new Mac, /bin/sh doesn't honor the -n flag
 # this is why we can't have nice things

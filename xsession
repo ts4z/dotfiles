@@ -52,7 +52,6 @@ fi
 # shell running and run .xinitrc in a subshell.
 #
 # cd here because BSD might think we're in /usr/home, not /home.
-# stupid place for a symlink.
 #
 (cd ; bash "$HOME/.xinitrc")
 

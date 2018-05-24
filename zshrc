@@ -141,7 +141,7 @@ for dir in \
  "$HOME"/local \
  "$HOME"/opt/scala \
  "$HOME"/go \
- /opt/likewise \
+ /usr/lib/go-1.9 \
  /usr/local \
  /usr/local/X11R6 \
  /usr/local/kde \

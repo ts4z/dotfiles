@@ -57,12 +57,12 @@ set_prompt_git_vars ()
     prompt_git_branch=''
     local branch=$(current_git_branch)
     if [[ "$branch" != '' ]]; then
-        if [ "$branch" = master ]; then
-            # "master" is too long and too common; abbreviate
-            # (consider an emoji tree if OSX Emacs restores support
-            # for them.)
-            branch='⍟' # other interesting characters: ⎈⍟⧳⋮
-        fi
+        # if [ "$branch" = master ]; then
+        #     # "master" is too long and too common; abbreviate
+        #     # (consider an emoji tree if OSX Emacs restores support
+        #     # for them.)
+        #     branch='⍟' # other interesting characters: ⎈⍟⧳⋮
+        # fi
         local rev_on=''
         local rev_off=''
         local git_status=$(git status -s 2>&1)

@@ -70,7 +70,7 @@ set_prompt_git_vars ()
             # workspace is dirty (uncommitted file OR unpushed change)
             local stars=''
             if echo "$git_status" | grep -q '??' ; then
-                stars='☢'
+                stars='♺'
             fi
             if ! git diff HEAD --quiet ; then
                 # we are not consistent with HEAD; add a *

@@ -1,0 +1,173 @@
+#!/bin/sh
+
+# Set up usual utilities on a host that's new to me.
+
+# gotchas:
+# - untested except on a Mac, and even then, not tested much
+# - schizophrenic with respect to writing to stdout/stderr
+
+set -eu
+
+# Try and set pipefail; won't work if we're using a terrible /bin/sh
+set -o pipefail || (echo "can't set pipefail; not fatal, getting on with it"; true)
+
+# This is a work-in-progress to install all the stuff that I assume is
+# installed, but isn't necessarily.
+
+dryrun=''                     # if set, don't do anything, just pretend
+aws_switch=''                 # if set, install awscli and other AWS utilities
+k8s_switch=''                 # if set, install all the k8s stuff we know about
+
+help() {
+    cat 1>&2 <<EOF
+$0: slightly abstracted setup utility for my dev box
+
+Supposed to be idempotent.  May require passwords and other interaction.
+
+options:
+-a .... install awscli and other AWS utilities
+-n .... don't do anything, just talk about it
+-8 .... install kubernetes stuff
+EOF
+}
+# -n: dryrun
+# -8: install kubernetes stuff
+args=`getopt an8 $*`
+
+if [ $? != 0 ]; then
+    echo 'bad arg'
+    exit 2
+fi
+set -- $args
+for i; do
+    case "$i" in
+        -a) aws_switch=1
+            shift
+            ;;
+        -8) k8s_switch=1
+            shift
+            ;;
+        -n) dryrun=1
+            shift
+            ;;
+    esac
+done
+
+note () {
+    echo "..." "$@"
+}
+
+# Feature test
+inst_k8s () {
+    test -n "$k8s_switch"
+}
+
+# Feature test
+inst_aws () {
+    test -n "$aws_switch"
+}
+
+# Feature test
+on_a_mac() {
+    test "Darwin" = "$(uname -s)"
+}
+
+begin_section () {
+    echo "---+++ installing: $1..."
+}
+
+# Install packages, specifically with brew, respecting $dryrun.
+brew_install_pkgs () {
+    cmd brew install "$@"
+}
+
+# Install abstract, similarly-named packages.  (Heuristic, and a lousy one.)
+install_pkgs () {
+    # this needs code to do the right thing when we're not on a Mac
+    brew_install_pkgs "$@"
+}
+
+cmd () {
+    echo "$" "$@"
+    noecho_cmd "$@"
+}
+
+noecho_cmd () {
+    if test -z "$dryrun" ; then
+        "$@"
+    fi
+}
+
+
+install_homebrew () {
+    echo '$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+    noecho_cmd /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+}
+
+if on_a_mac; then
+    note "This is a Mac. Will use Homebrew."
+    sleep 5
+    install_homebrew
+fi
+
+#############################################################################
+begin_section "the usual suspects"
+install_pkgs \
+    go \
+    gnupg \
+    ispell \
+    jq \
+    kubectl \
+    zsh
+
+#############################################################################
+if on_a_mac ; then
+    begin_section "possibly Homebrew-specific package names"
+
+    inst_aws && install_pkgs awscli
+    inst_k8s && install_pkgs kubernetes-helm
+fi
+
+#############################################################################
+begin_section "Emacs"
+
+if on_a_mac; then
+    if [ -x /usr/local/bin/emacs ]; then
+        note "emacs already installed; skipping"
+    else
+        cmd brew install emacs --HEAD --with-cocoa --with-librsvg --with-imagemagick@6
+    fi
+
+    if [ -d /usr/local/opt/emacs/Emacs.app ]; then
+        note "updating symlink"
+        (cd /Applications && (
+             cmd rm /Applications/Emacs.app; 
+             cmd ln -s /usr/local/opt/emacs/Emacs.app))
+    fi
+
+else
+    install_pkgs emacs
+fi
+
+#############################################################################
+begin_section "Go utilities (via go get)"
+
+if [ -z "$GOPATH" ]; then
+    note "GOPATH is not set. This *should* work, but I wouldn't bet on it."
+fi
+
+for gettable in \
+     github.com/alecthomas/gometalinter \
+     golang.org/x/tools/cmd/godoc \
+     github.com/golang/lint/golint \
+     ; do
+    cmd go get "$gettable"
+done
+
+#############################################################################
+
+if on_a_mac && inst_k8s ; then
+    begin_section "Kubernetes special-cases"
+    cmd brew tap blendle/blendle
+    install_pkgs kns
+fi

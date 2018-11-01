@@ -171,6 +171,7 @@ for possible in emacsclient-nw emacsclient gnuclient emacs xemacs vi ; do
     fi
 done
 
+export GOPATH="$HOME/go"
 export CVS_RSH=ssh
 export PAGER=less
 export VISUAL="${EDITOR}"

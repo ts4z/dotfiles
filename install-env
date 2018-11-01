@@ -86,7 +86,7 @@ on_a_mac() {
 }
 
 begin_section () {
-    echo "---+++ installing: $1..."
+    echo "-=-=- installing: $1..."
 }
 
 # Install packages, specifically with brew, respecting $dryrun.
@@ -180,21 +180,23 @@ for gettable in \
 done
 
 #############################################################################
-begin_section "Kubernetes utilities"
-
 if inst_k8s ; then
     begin_section "Kubernetes utilities"
-    install_pkgs kubectl
-fi
 
-if on_a_mac && inst_k8s ; then
-    begin_section "Kubernetes special-cases"
-    cmd brew tap blendle/blendle
-    install_pkgs kns
+    install_pkgs kubectl
+
+    if on_a_mac ; then
+        cmd brew tap blendle/blendle
+        install_pkgs kns
+    fi
 fi
 
 #############################################################################
 
-if inst_1password ; then
+if on_a_mac && inst_1password ; then
     brew cask install 1password
+fi
+
+if on_a_mac ; then
+    brew cask install firefox
 fi

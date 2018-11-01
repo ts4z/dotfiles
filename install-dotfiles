@@ -34,15 +34,8 @@ fi
 cd "${HOME}"
 # /bin/ls -1 | egrep -v '^(README.md|CVS|install-dotfiles)$' | sed 's/$/ \\/'
 for dotfile in \
-Xclients \
-Xresources \
-Xresources.1280x1024 \
-Xresources.1600x1200 \
-Xresources.2560x1024 \
-Xresources.3200x1200 \
 bash_profile \
 bashrc \
-fvwm2rc \
 gdbinit \
 gitconfig \
 git-global-ignore \
@@ -51,8 +44,6 @@ inputrc \
 screenrc \
 tcshrc \
 tmux.conf \
-xinitrc \
-xsession \
 zprofile \
 zshrc \
                ; do

@@ -206,3 +206,5 @@ fi
 if on_a_mac ; then
     brew cask install firefox
 fi
+
+begin_section "completed"

@@ -183,7 +183,7 @@ done
 if inst_k8s ; then
     begin_section "Kubernetes utilities"
 
-    install_pkgs kubectl
+    install_pkgs kops kubectl
 
     if on_a_mac ; then
         cmd brew tap blendle/blendle

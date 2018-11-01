@@ -6,9 +6,9 @@
 # - untested except on a Mac, and even then, not tested much
 # - schizophrenic with respect to writing to stdout/stderr
 
-# I've had problems on a corp laptop getting the CLI tools installed.
-# In this case, I installed them by hand; I'm not sure why homebrew
-# couldn't do it.
+# I've had problems on a corp laptop getting the CLI tools installed.  In this
+# case, I installed them by hand; I'm not sure why homebrew couldn't do it.
+# I'll debug it next time I set up a Mac, I suppose.
 
 set -eu
 
@@ -21,7 +21,7 @@ set -o pipefail || (echo "can't set pipefail; not fatal, getting on with it"; tr
 dryrun=''                     # if set, don't do anything, just pretend
 aws_switch=''                 # if set, install awscli and other AWS utilities
 k8s_switch=''                 # if set, install all the k8s stuff we know about
-opw_switch=''			# if set, & on mac, install 1password cask 
+opw_switch=''                 # if set, & on mac, install 1password cask 
 
 help() {
     cat 1>&2 <<EOF
@@ -140,6 +140,12 @@ if on_a_mac ; then
 
     inst_aws && install_pkgs awscli
     inst_k8s && install_pkgs kubernetes-helm
+fi
+
+#############################################################################
+if inst_k8s ; then
+    begin_section "k8s tools"
+    install_pkgs kops kubectl
 fi
 
 #############################################################################

@@ -128,6 +128,7 @@ fi
 #############################################################################
 begin_section "the usual suspects"
 install_pkgs \
+    dep \
     go \
     gnupg \
     ispell \

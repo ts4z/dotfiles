@@ -179,9 +179,10 @@ fi
 
 for gettable in \
      github.com/alecthomas/gometalinter \
-     golang.org/x/tools/cmd/godoc \
      github.com/golang/lint/golint \
      github.com/nsf/gocode \
+     github.com/rogpeppe/godef \
+     golang.org/x/tools/cmd/godoc \
      ; do
     cmd go get "$gettable"
 done

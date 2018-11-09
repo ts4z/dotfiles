@@ -128,11 +128,14 @@ fi
 #############################################################################
 begin_section "the usual suspects"
 install_pkgs \
+    curl \
     dep \
+    direnv \
     go \
     gnupg \
     ispell \
     jq \
+    protobuf \
     zsh
 
 #############################################################################
@@ -180,9 +183,13 @@ fi
 for gettable in \
      github.com/alecthomas/gometalinter \
      github.com/golang/lint/golint \
+     github.com/golang/mock/mockgen \
+     github.com/maxbrunsfeld/counterfeiter \
      github.com/nsf/gocode \
      github.com/rogpeppe/godef \
      golang.org/x/tools/cmd/godoc \
+     golang.org/x/tools/cmd/goimports \
+     golang.org/x/tools/cmd/stringer \
      ; do
     cmd go get "$gettable"
 done

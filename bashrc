@@ -38,6 +38,7 @@ for dir in \
  /usr/sbin \
  /usr/games \
  /sbin \
+ $HOME/.cargo/bin \
  ; do
   PATH="$PATH:$dir"
 done

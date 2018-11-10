@@ -132,7 +132,6 @@ install_pkgs \
     gnupg \
     ispell \
     jq \
-    kubectl \
     zsh
 
 #############################################################################
@@ -167,7 +166,7 @@ fi
 #############################################################################
 begin_section "Go utilities (via go get)"
 
-if [ -z "$GOPATH" ]; then
+if [ -z "${GOPATH:-}" ]; then
     note "GOPATH is not set. This *should* work, but I wouldn't bet on it."
 fi
 
@@ -180,12 +179,20 @@ for gettable in \
 done
 
 #############################################################################
+begin_section "Kubernetes utilities"
+
+if inst_k8s ; then
+    begin_section "Kubernetes utilities"
+    install_pkgs kubectl
+fi
 
 if on_a_mac && inst_k8s ; then
     begin_section "Kubernetes special-cases"
     cmd brew tap blendle/blendle
     install_pkgs kns
 fi
+
+#############################################################################
 
 if inst_1password ; then
     brew cask install 1password

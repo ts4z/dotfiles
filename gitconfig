@@ -24,3 +24,7 @@
 
 [include]
         path = ~/.gitconfig-local
+
+# This is required if you're using 2FA with github.com.
+[url "git@github.com:"]
+	insteadOf = https://github.com/

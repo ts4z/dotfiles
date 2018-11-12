@@ -83,8 +83,15 @@ set_prompt_git_vars ()
     fi
 }
 
+case "$(hostname -s)" in
+    tim-showalter-*)
+        prompt_hostname=yuk ;;
+    *)
+        prompt_hostname='%m' ;;
+esac
+
 reset_prompt() {
-    PROMPT="%1(j.[%j job%2(j.s.)] .)%B${prompt_nat}%m%b %42<…<%~${prompt_git_branch}%<< %# "
+    PROMPT="%1(j.[%j job%2(j.s.)] .)%B${prompt_nat}${prompt_hostname}%b %42<…<%~${prompt_git_branch}%<< %# "
 }
 
 if [ `id -u` != 0 ]; then

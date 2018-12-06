@@ -2,3 +2,5 @@
 # needs .gitconfig support to work
 
 *~
+\#*\#
+.\#*

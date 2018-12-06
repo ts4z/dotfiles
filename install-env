@@ -137,6 +137,7 @@ install_pkgs \
     jq \
     less \
     protobuf \
+    shellcheck \
     tree \
     zsh
 

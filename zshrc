@@ -43,7 +43,7 @@ unset MAILPATH
 
 prompt_nat='%S%n%s@'
 case `whoami` in
-    timshowalter|tjs)
+    tshowalter|timshowalter|timshow|tjs)
         prompt_nat='' ;;
     *) ;;
 esac
@@ -84,8 +84,6 @@ set_prompt_git_vars ()
 }
 
 case "$(hostname -s)" in
-    tim-showalter-*)
-        prompt_hostname=yuk ;;
     *)
         prompt_hostname='%m' ;;
 esac

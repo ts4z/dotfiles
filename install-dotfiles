@@ -82,3 +82,17 @@ zshrc \
 
   echo "done."
 done
+
+for f in \
+    emacs \
+    ; do
+    echon "$f: "
+    if [ -f ".$f" ]; then
+        echon "found unwanted file, moving to $f.old, "
+        mv ".$f" "${f}".old
+        echo done.
+    else
+        echo "none found."
+    fi
+done
+echo "done."

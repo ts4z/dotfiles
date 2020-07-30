@@ -12,16 +12,13 @@
 
 set -eu
 
-# Try and set pipefail; won't work if we're using a terrible /bin/sh
-set -o pipefail || (echo "can't set pipefail; not fatal, getting on with it"; true)
-
 # This is a work-in-progress to install all the stuff that I assume is
 # installed, but isn't necessarily.
 
 dryrun=''                     # if set, don't do anything, just pretend
-aws_switch=''                 # if set, install awscli and other AWS utilities
-k8s_switch=''                 # if set, install all the k8s stuff we know about
-opw_switch=''                 # if set, & on mac, install 1password cask 
+sw_aws=''                     # if set, install awscli and other AWS utilities
+sw_k8s=''                     # if set, install all the k8s stuff we know about
+sw_1password=''               # if set, & on mac, install 1password cask 
 
 help() {
     cat 1>&2 <<EOF
@@ -47,13 +44,13 @@ fi
 set -- $args
 for i; do
     case "$i" in
-	-1) opw_switch=1
+	-1) sw_1password=1
 	    shift
 	    ;;
-        -a) aws_switch=1
+        -a) sw_aws=1
             shift
             ;;
-        -8) k8s_switch=1
+        -8) sw_k8s=1
             shift
             ;;
         -n) dryrun=1
@@ -68,16 +65,16 @@ note () {
 
 # Feature test
 inst_k8s () {
-    test -n "$k8s_switch"
+    test -n "$sw_k8s"
 }
 
 # Feature test
 inst_aws () {
-    test -n "$aws_switch"
+    test -n "$sw_aws"
 }
 
 inst_1password() {
-    on_a_mac && test -n "$opw_switch"
+    on_a_mac && test -n "$sw_1password"
 }
 
 # Feature test
@@ -85,19 +82,24 @@ on_a_mac() {
     test "Darwin" = "$(uname -s)"
 }
 
+on_debian() {
+    test -f /etc/debian_version
+}
+
 begin_section () {
     echo "-=-=- installing: $1..."
 }
 
-# Install packages, specifically with brew, respecting $dryrun.
-brew_install_pkgs () {
-    cmd brew install "$@"
-}
-
 # Install abstract, similarly-named packages.  (Heuristic, and a lousy one.)
 install_pkgs () {
-    # this needs code to do the right thing when we're not on a Mac
-    brew_install_pkgs "$@"
+    if on_debian ; then
+        cmd sudo apt-get install "$@"
+    elif on_a_mac ; then
+        cmd brew_install_pkgs "$@"
+    else
+        echo "Local package manager unknown."
+        exit 2
+    fi
 }
 
 cmd () {
@@ -131,7 +133,6 @@ install_pkgs \
     curl \
     dep \
     direnv \
-    go \
     gnupg \
     ispell \
     jq \
@@ -142,8 +143,19 @@ install_pkgs \
     zsh
 
 #############################################################################
+if ! on_a_mac ; then
+    begin_section "installing non-Mac stuff"
+
+    install_pkgs xterm
+fi
+
+#############################################################################
 if on_a_mac ; then
     begin_section "possibly Homebrew-specific package names"
+
+    # this is in the Mac block beccause the Debian installation is not
+    # the same.
+    install_pkgs go
 
     inst_aws && install_pkgs awscli
     inst_k8s && install_pkgs kubernetes-helm
@@ -177,27 +189,6 @@ else
 fi
 
 #############################################################################
-begin_section "Go utilities (via go get)"
-
-if [ -z "${GOPATH:-}" ]; then
-    note "GOPATH is not set. This *should* work, but I wouldn't bet on it."
-fi
-
-for gettable in \
-     github.com/alecthomas/gometalinter \
-     github.com/golang/lint/golint \
-     github.com/golang/mock/mockgen \
-     github.com/maxbrunsfeld/counterfeiter \
-     github.com/nsf/gocode \
-     github.com/rogpeppe/godef \
-     golang.org/x/tools/cmd/godoc \
-     golang.org/x/tools/cmd/goimports \
-     golang.org/x/tools/cmd/stringer \
-     ; do
-    cmd go get "$gettable"
-done
-
-#############################################################################
 if inst_k8s ; then
     begin_section "Kubernetes utilities"
 
@@ -211,8 +202,12 @@ fi
 
 #############################################################################
 
-if on_a_mac && inst_1password ; then
-    brew cask install 1password
+if inst_1password ; then
+    if on_a_mac ; then
+        brew cask install 1password
+    else
+        echo "I don't know how to install 1password here."
+    fi
 fi
 
 if on_a_mac ; then

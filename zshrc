@@ -142,12 +142,14 @@ for dir in \
 done
 for dir in \
  "$HOME"/go \
+ "/usr/lib/go-1.12/bin" \
  "$HOME" \
  "$HOME"/local \
  "$HOME"/opt/scala \
  "$HOME"/go \
  "$HOME/.cargo" \
- /usr/lib/go-1.9 \
+ /snap \
+ /usr/lib/go-1.12 \
  /usr/local \
  /usr/local/X11R6 \
  /usr/local/kde \
@@ -157,10 +159,13 @@ for dir in \
  /usr/X11R6 \
  ; do
   # duplicates are eliminated below
-  PATH="$PATH:${dir}/bin"
-  if [ -d "${dir}/share" ]; then
+  if [ -d "${dir}/bin" ]; then
+    PATH="$PATH:${dir}/bin"
+  fi
+  if [ -d "${dir}/share/man" ]; then
     MANPATH="${MANPATH}:${dir}/share/man"
-  else
+  fi
+  if [ -d "${dir}/man" ]; then
     MANPATH="${MANPATH}:${dir}/man"
   fi
 done
@@ -201,6 +206,16 @@ rot13 () {
     else
 	tr a-zA-Z n-za-mN-ZA-M
     fi
+}
+
+no-screensaver() {
+    echo "Crippling xscreensaver; ^C to end..."
+    (
+        while true; do
+            xscreensaver-command -deactivate >/dev/null
+            sleep 60
+        done
+    )
 }
 
 alias brawl='brew update && brew upgrade && brew cleanup && brew cask outdated' 

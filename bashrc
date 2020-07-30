@@ -35,6 +35,7 @@ cleanpath ()
 #
 
 for dir in \
+ "$HOME/go/bin" \
  /usr/sbin \
  /usr/games \
  /sbin \

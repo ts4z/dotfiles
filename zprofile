@@ -6,7 +6,7 @@
 #
 # If we are running on Mac, every shell is a login shell,
 # and this is annoying.
-if [ -z "$XDMRUNNING" -a `uname` != Darwin ]; then
+if false && [ -z "$XDMRUNNING" -a `uname` != Darwin ]; then
     (
         echo "/*"
 

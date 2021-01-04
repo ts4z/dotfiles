@@ -253,6 +253,11 @@ if alias rm 2>/dev/null ; then
   unalias rm
 fi
 
+# argh. ubuntu.
+if ! which cal >/dev/null && which ccal >/dev/null ; then
+    alias cal=ccal
+fi
+
 set -o notify
 
 # see also WORDCHARS; I think / and = need to be omitted from it

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec xterm -fg white -bg darkgreen -cr orange -T "xrsh $*" -e rsh $* &

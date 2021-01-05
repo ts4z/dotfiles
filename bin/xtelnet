@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xterm -fg white -bg darkgreen -cr orange -T "telnet $*" -e telnet "$@" &

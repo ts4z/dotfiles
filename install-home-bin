@@ -1,0 +1,87 @@
+#!/bin/sh
+# -*- sh -*-
+
+set -euf
+
+# files containing this string in the first 3 lines will
+# be left alone.
+save="install-dotfiles-preserve"
+
+# on my shiny new Mac, /bin/sh doesn't honor the -n flag
+# this is why we can't have nice things
+echon () {
+  /bin/echo -n "$@"
+}
+
+if [ -z "$HOME" ]; then
+  echo "\$HOME not set.  I can't guess where you hid the git repository."
+  exit 1
+fi
+
+cvsdir=''
+for dir in "$HOME"/git/dotfiles "$(pwd)" ; do
+  if [ -z "$cvsdir" ] && [ -d "$dir" ]; then
+    cvsdir="$dir"
+    echo "repository dotfiles directory is $cvsdir"
+  fi
+done
+
+if [ -z "$cvsdir" ]; then
+  echo "Unable to deduce the repository."
+  exit 0
+fi
+
+if test ! -d ~/bin ; then
+    echo "WARNING: ~/bin exists but is not a directory!"
+    exit 2
+fi
+
+cd "${HOME}"
+
+if test -d ~/bin ; then
+    echo "NOTE: ~/bin exists"
+else
+    mkdir bin
+fi
+
+list_scripts () {
+    cd "$cvsdir"/bin
+    ls -1
+}
+
+cd "$HOME/bin"
+
+for script_file in $(list_scripts) ; do
+  echon "${script_file}: "
+
+  # 0.  Check for override; ignore if so
+  if head -3 "$script_file" | grep -q "$save" ; then
+      echo "exists, and is marked to keep; skip."
+      continue
+  fi
+
+  # 1.  blow away old links
+  # -L is a link on bash; -h is on FreeBSD /bin/sh?
+  # -h seems to work on bash
+  if [ -h "${script_file}" ]; then
+    echon "removing old link, "
+    rm "${script_file}"
+  fi
+
+  # 2.  move aside old file
+  if [ -e "${script_file}" ]; then
+    echon "moving file to ${script_file}.old, "
+    mv "$script_file" "old.${script_file}.old"
+  fi
+
+  # 3.  install new link
+  echon "installing link, "
+  ln -s "$cvsdir/bin/$script_file" "$script_file"
+
+  if test "#!" = "$(head -1 "$cvsdir/bin/$script_file" | cut -c1-2)"  ; then
+    echon "making executable, "
+    chmod +x "$cvsdir/bin/$script_file"
+  fi
+
+  echo "done."
+done

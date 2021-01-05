@@ -1,0 +1,39 @@
+#!/usr/bin/perl -w
+
+sub lookup {
+    my $inaddr = shift @_;
+
+    if (!($inaddr =~ /(\d*)\.(\d*)\.(\d*)\.(\d*)/)) {
+	print STDERR "invalid ip address syntax for lookup\n"; 
+	return 1;
+    }
+  
+    if ($1 > 255 || $2 > 255 || $3 > 255 || $4 > 255) {
+	print STDERR "ip addresses do not have parts greater than 255\n";
+	return 1;
+    }
+    
+    $kid = fork();
+    if ($kid < 0) {
+	print STDERR "can't fork: $!\n";
+	exit 1;
+    }
+    if ($kid) {
+	wait();
+	return $?;
+    } else {
+	exec "/usr/bin/nslookup", ("-query=PTR", "$4.$3.$2.$1.in-addr.arpa");
+    }
+}
+
+if (defined($ARGV[0])) {
+    exit lookup($ARGV[0]);
+}
+
+my $rc = 0;
+while ($rc == 0 and $_ = <ARGV>) {
+    $rc = lookup $_;
+}
+
+print STDERR "exiting $rc\n";
+exit $rc

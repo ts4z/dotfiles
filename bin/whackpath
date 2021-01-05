@@ -1,0 +1,14 @@
+#!/usr/bin/perl -w
+
+# Split on colon.  For each directory in that split, if the
+# directory doesn't begin with slash, or is nonempty, or we haven't
+# already seen it (mark seen as side effect in hash), add it to
+# array.  Re-join array.
+
+foreach (split(/:/, shift @ARGV)) {
+  if ( (!((m:^[^/]|^$:)||$path{$_}++)) && -d "$_") {
+    $path[1+$#path]=$_;
+  }
+}
+
+print join(":",@path),"\n";

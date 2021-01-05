@@ -1,0 +1,67 @@
+#!/bin/sh
+
+#
+# Go stuff has a way of drifting out of actually working
+# on random upgrades.  This "solves" the problem by making
+# a script out of the reinstalling step.
+#
+# The most flagrant problems I've had were with golangci-lint
+# which breaks ALL THE TIME and recommends binary installation,
+# which I really hate the idea of.
+#
+
+set -euf
+
+begin_section () {
+    echo "-=-=- installing: $1..."
+}
+
+sw_dryrun=''                     # if set, don't do anything, just pretend
+
+args=$(getopt n $*)
+if [ $? != 0 ]; then
+    echo 'bad arg'
+    exit 2
+fi
+
+set -- $args
+for i; do
+    case "$i" in
+        -n) sw_dryrun=1
+            shift
+            ;;
+    esac
+done
+
+cmd () {
+    echo "$" "$@"
+    noecho_cmd "$@"
+}
+
+noecho_cmd () {
+    if test -z "$sw_dryrun" ; then
+        "$@"
+    fi
+}
+
+echo "GOPATH=${GOPATH:-}"
+
+if [ -z "${GOPATH:-}" ]; then
+    note "GOPATH is not set. This *should* work, but I wouldn't bet on it."
+fi
+
+export GO111MODULE=on
+
+for gettable in \
+    golang.org/x/lint \
+    "github.com/golangci/golangci-lint/cmd/golangci-lint@v1.27.0" \
+    github.com/rogpeppe/godef \
+    golang.org/x/tools/cmd/godoc \
+    golang.org/x/tools/cmd/goimports \
+    golang.org/x/tools/cmd/gorename \
+    golang.org/x/tools/cmd/stringer \
+    golang.org/x/tools/gopls \
+    ; do
+    begin_section "$gettable"
+    cmd go get "$gettable"
+done

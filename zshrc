@@ -236,7 +236,7 @@ alias tmuxa='tmux a || tmux'
 # not optimal, but pretty good.
 alias pwgen='dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64 | tr +/ __'
 
-if [ `uname -s` != Darwin ]; then
+if ! which open >&/dev/null ; then
   alias open=xdg-open
 fi
 # nobody seems to have finger installed anymore.

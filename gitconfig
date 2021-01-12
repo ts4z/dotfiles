@@ -21,6 +21,10 @@
         sl = log --graph --all --oneline
         st = status
         up = pull --rebase
+        # accomidate my p4 brain damage
+        sync = pull --rebase
+        # accomidate my G brain damage
+        xl = log --graph --all --oneline
 
 [include]
         path = ~/.gitconfig-local

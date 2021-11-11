@@ -131,13 +131,11 @@ fi
 begin_section "the usual suspects"
 install_pkgs \
     curl \
-    dep \
     direnv \
     gnupg \
     ispell \
     jq \
     less \
-    protobuf \
     shellcheck \
     tcsh \
     tree \

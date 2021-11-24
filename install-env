@@ -1,20 +1,18 @@
 #!/bin/sh
 
-# Set up usual utilities on a host that's new to me.
+# Set up usual utilities on a host that's new to me.  This is a
+# work-in-progress to install all the stuff that I assume is installed, but
+# isn't necessarily.
 
 # gotchas:
 # - probably untested on whatever I'm about to run it on
 # - perpetually always out of date
-# - schizophrenic with respect to writing to stdout/stderr
 
 # I've had problems on a corp laptop getting the CLI tools installed.  In this
 # case, I installed them by hand; I'm not sure why homebrew couldn't do it.
 # I'll debug it next time I set up a Mac, I suppose.
 
 set -eu
-
-# This is a work-in-progress to install all the stuff that I assume is
-# installed, but isn't necessarily.
 
 dryrun=''                     # if set, don't do anything, just pretend
 sw_aws=''                     # if set, install awscli and other AWS utilities
@@ -147,6 +145,7 @@ fi
 
 #############################################################################
 begin_section "the usual suspects"
+# These are packages whose names are consistent across multiple environments.
 install_pkgs \
     curl \
     direnv \
@@ -218,6 +217,7 @@ fi
 if on_debian ; then
     begin_section "installing Debian stuff"
 
+    # These are things that have names pertinent only to Debian.
     install_pkgs \
         fonts-go \
         fonts-xfree86-nonfree \
@@ -233,7 +233,12 @@ if have_command go ; then
         golang.org/x/tools/gopls@latest  \
         github.com/rogpeppe/godef@latest \
         ; do
-        GO111MODULE=on cmd go install "$thingy"
+        short="$(echo "$thingy" | cut -d@ -f1 | rev | cut -d/ -f1 | rev)"
+        if have_command "$short" ; then
+            note "skip $short; a version is already on PATH"
+        else
+            GO111MODULE=on cmd go install "$thingy"
+        fi
     done
 fi
 

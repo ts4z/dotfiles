@@ -3,7 +3,8 @@
 # Set up usual utilities on a host that's new to me.
 
 # gotchas:
-# - untested except on a Mac, and even then, not tested much
+# - probably untested on whatever I'm about to run it on
+# - perpetually always out of date
 # - schizophrenic with respect to writing to stdout/stderr
 
 # I've had problems on a corp laptop getting the CLI tools installed.  In this
@@ -18,7 +19,8 @@ set -eu
 dryrun=''                     # if set, don't do anything, just pretend
 sw_aws=''                     # if set, install awscli and other AWS utilities
 sw_k8s=''                     # if set, install all the k8s stuff we know about
-sw_1password=''               # if set, & on mac, install 1password cask 
+sw_1password=''               # if set, & on mac, install 1password cask
+sw_help=''                    # if set, print help
 
 help() {
     cat 1>&2 <<EOF
@@ -30,17 +32,18 @@ options:
 -1 .... install 1password cask (Mac only)
 -8 .... install kubernetes stuff
 -a .... install awscli and other AWS utilities
+-h .... help
 -n .... don't do anything, just talk about it
 EOF
 }
-# -n: dryrun
-# -8: install kubernetes stuff
-args=`getopt an18 $*`
-
+# shellcheck disable=SC2048 disable=SC2086 # that's how it works, shellcheck
+args=$(getopt ahn18 $*)
+# shellcheck disable=SC2181 # if I did what you asked it wouldn't work
 if [ $? != 0 ]; then
     echo 'bad arg'
     exit 2
 fi
+# shellcheck disable=SC2086 # it just sucks, shellcheck. I'm sorry. You're OK.
 set -- $args
 for i; do
     case "$i" in
@@ -56,8 +59,16 @@ for i; do
         -n) dryrun=1
             shift
             ;;
+        -h) sw_help=1
+            shift
+            ;;
     esac
 done
+
+if [ -n "$sw_help" ]; then
+    help
+    exit 3
+fi
 
 note () {
     echo "..." "$@"
@@ -82,12 +93,16 @@ on_a_mac() {
     test "Darwin" = "$(uname -s)"
 }
 
-on_debian() {
+on_debian() {                   # or Ubuntu
     test -f /etc/debian_version
 }
 
+have_command() {
+    command -v "$1" >/dev/null 2>&1
+}
+
 begin_section () {
-    echo "-=-=- installing: $1..."
+    echo "-=-=- installing: $1"
 }
 
 # Install abstract, similarly-named packages.  (Heuristic, and a lousy one.)
@@ -117,7 +132,10 @@ maybe_install_homebrew () {
     if [ -x /usr/local/bin/brew ]; then
 	note 'brew is already installed; will just use it as-is.'
     else
-	echo '$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+        # Don't use cmd, it does the wrong thing here with the nested Homebrew
+        # install hack.
+        # shellcheck disable=SC2016 # I'm doing that on purpose, see?
+ 	echo '$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 	noecho_cmd /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 }
@@ -197,6 +215,28 @@ if on_debian ; then
         nut-server
 fi
 
+if on_debian ; then
+    begin_section "installing Debian stuff"
+
+    install_pkgs \
+        fonts-go \
+        fonts-xfree86-nonfree \
+        fonts-hack-ttf \
+        ttf-mscorefonts-installer \
+        golang \
+        ncal
+fi
+
+if have_command go ; then
+    begin_section "installing Go utilities"
+    for thingy in                        \
+        golang.org/x/tools/gopls@latest  \
+        github.com/rogpeppe/godef@latest \
+        ; do
+        GO111MODULE=on cmd go install "$thingy"
+    done
+fi
+
 #############################################################################
 if on_a_mac ; then
     begin_section "possibly Homebrew-specific package names"
@@ -231,7 +271,6 @@ if on_a_mac; then
              cmd rm -f /Applications/Emacs.app &&
              cmd ln -s /usr/local/opt/emacs/Emacs.app))
     fi
-
 else
     install_pkgs emacs
 fi

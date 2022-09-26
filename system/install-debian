@@ -1,0 +1,206 @@
+#!/bin/sh
+
+# Set up system administration stuff.
+
+
+set -eu
+
+# This is a work-in-progress to install a personal Debian system to my liking
+# and my rather loose systems administration standards.
+
+dryrun=''                     # if set, don't do anything, just pretend
+my='tjs'                      # my prefix
+
+help() {
+    cat 1>&2 <<EOF
+$0: slightly abstracted setup utility for my personal box
+
+Supposed to be idempotent.  May require passwords and other interaction.
+
+options:
+-n .... don't do anything, just talk about it
+EOF
+}
+# -n: dryrun
+args=`getopt n $*`
+
+if [ $? != 0 ]; then
+    echo 'bad arg'
+    exit 2
+fi
+set -- $args
+for i; do
+    case "$i" in
+        -n) dryrun=1
+            shift
+            ;;
+    esac
+done
+
+note () {
+    echo "..." "$@"
+}
+
+fail () {
+    echo "!!!" "$@"
+    exit 1
+}
+
+# Feature test
+on_a_mac() {
+    test "Darwin" = "$(uname -s)"
+}
+
+on_debian() {
+    test -f /etc/debian_version
+}
+
+begin_section () {
+    echo "-=-=- installing: $1..."
+}
+
+# Install abstract, similarly-named packages.  (Heuristic, and a lousy one.)
+install_pkgs () {
+    if on_debian ; then
+        cmd sudo apt-get install "$@"
+    elif on_a_mac ; then
+        cmd brew_install_pkgs "$@"
+    else
+        echo "Local package manager unknown."
+        exit 2
+    fi
+}
+
+cmd () {
+    echo "$" "$@"
+    noecho_cmd "$@"
+}
+
+as_root () {
+    cmd sudo "$@"
+}
+
+noecho_cmd () {
+    if test -z "$dryrun" ; then
+        "$@"
+    fi
+}
+
+if ! on_debian; then
+    fail "I only work on Debian. And maybe Ubuntu."
+fi
+
+
+#############################################################################
+begin_section "sudo"
+
+# Do this early and we won't have to type passwords as much perhaps, as the
+# apt commands are sudo-OK on my home box.
+
+as_root cp sudoers /etc/sudoers.d/"$my"-sudoers
+as_root chmod 0440 /etc/sudoers.d/"$my"-sudoers
+as_root visudo -c
+
+#############################################################################
+begin_section "/local"
+as_root mkdir -p /local/rsnapshot
+as_root mkdir -p /local/etc
+
+#############################################################################
+begin_section "ntp"
+
+install_pkgs ntp
+as_root systemctl enable ntp
+as_root systemctl start ntp
+
+#############################################################################
+begin_section "rsnapshot"
+
+if dpkg-query -l rsnapshot ; then
+    echo rsnapshot is already installed.
+else
+    note "rsnapshot has been removed from recent Debian versions.  It would be"
+    note "better if we could just install the rsnapshot package here, but"
+    note "instead we install its dependencies and then grab a deb file from a"
+    note "(trustworthy) website."
+
+    # Hand-install dependency, since dpkg can't do this for us.
+    as_root apt install liblchown-perl
+
+    dir="/tmp/$my.rsnapshot.$$.tmp"
+    mkdir -p "$dir"
+    (
+        cd "$dir"
+        pkg="rsnapshot_1.4.4-1_all.deb"
+        cmd wget "https://rsnapshot.org/downloads/$pkg"
+        as_root dpkg --install "$pkg"
+    )
+fi
+
+as_root cp rsnapshot.conf /etc/rsnapshot.conf
+
+#############################################################################
+begin_section "tarsnap"
+
+if dpkg-query -l tarsnap ; then
+    echo tarsnap is already installed.
+else
+    (
+        dir=/tmp/"$my.$$.tarsnap.tmp"
+        mkdir -p "$dir"
+        cd "$dir"
+        wget https://pkg.tarsnap.com/tarsnap-deb-packaging-key.asc
+        note "Key signatures:"
+        gpg --list-packets tarsnap-deb-packaging-key.asc | grep signature
+        note "Key:"
+        gpg --show-key tarsnap-deb-packaging-key.asc
+                
+        echo "See https://www.tarsnap.com/pkg-deb.html"
+        
+        # shellcheck disable=SC2039
+        echo -n "Trust the above? "
+        read -r ok
+        case "$ok" in
+            [Yy]*)
+                note "OK, proceeding."
+                ;;
+            *)
+                note "Not trusting that key, skipping rest of steps to install tarsnap."
+                exit
+        esac
+
+        cmd gpg --dearmor tarsnap-deb-packaging-key.asc
+        cmd mv tarsnap-deb-packaging-key.asc.gpg tarsnap-archive-keyring.gpg
+        as_root mv tarsnap-archive-keyring.gpg /usr/share/keyrings/
+        if test -z "$dryrun" ; then
+            echo "deb [signed-by=/usr/share/keyrings/tarsnap-archive-keyring.gpg] http://pkg.tarsnap.com/deb/$(lsb_release -s -c) ./" | sudo tee -a /etc/apt/sources.list.d/tarsnap.list
+        fi
+        as_root apt update
+        as_root apt install tarsnap
+    )
+fi
+as_root cp tarsnap-backup.sh /local/etc/
+
+#############################################################################
+begin_section "crontabs"
+(
+    cd cron.d
+    for f in [a-z]*[a-z] ; do
+        as_root cp "$f" /etc/cron.d/"$my"-"$f"
+    done
+)
+
+#############################################################################
+begin_section "world-readable logs"
+
+note "Warning!"
+note "World readable log-files are a security problem. But I use them on my"
+note "personal systems because it's easier than using sudo all the time."
+note "YMMV."
+
+# shellcheck disable=SC2016 # var interpolation not wanted
+as_root sed -i=.bak."$(date +%s)" 's/^$FileCreateMode 0640$/$FileCreateMode 0660/' \
+    /etc/rsyslog.conf
+as_root chmod -R a+r /var/log/*
+
+begin_section "completed"

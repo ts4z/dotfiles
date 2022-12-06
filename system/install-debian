@@ -2,7 +2,6 @@
 
 # Set up system administration stuff.
 
-
 set -eu
 
 # This is a work-in-progress to install a personal Debian system to my liking
@@ -97,7 +96,7 @@ begin_section "sudo"
 # Do this early and we won't have to type passwords as much perhaps, as the
 # apt commands are sudo-OK on my home box.
 
-as_root cp sudoers /etc/sudoers.d/"$my"-sudoers
+as_root cp sudoers.d/sudoers /etc/sudoers.d/"$my"-sudoers
 as_root chmod 0440 /etc/sudoers.d/"$my"-sudoers
 as_root visudo -c
 
@@ -107,11 +106,24 @@ as_root mkdir -p /local/rsnapshot
 as_root mkdir -p /local/etc
 
 #############################################################################
-begin_section "ntp"
+begin_section "packages"
 
-install_pkgs ntp
-as_root systemctl enable ntp
-as_root systemctl start ntp
+install_pkgs \
+    ntp
+
+#############################################################################
+begin_section "postfix"
+
+install_pkgs postfix postfix-doc
+
+#############################################################################
+begin_section "enable & start services"
+
+# shellcheck disable=SC2043 # there's only one thing in the loop right now
+for d in ntp ; do
+    as_root systemctl enable "$d"
+    as_root systemctl start "$d"
+done
 
 #############################################################################
 begin_section "rsnapshot"

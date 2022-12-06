@@ -132,6 +132,7 @@ begin_section "the usual suspects"
 install_pkgs \
     curl \
     direnv \
+    finger \
     gnupg \
     ispell \
     jq \
@@ -139,13 +140,60 @@ install_pkgs \
     shellcheck \
     tcsh \
     tree \
-    zsh
+    zsh \
+    tmux
+
 
 #############################################################################
 if ! on_a_mac ; then
     begin_section "installing non-Mac stuff"
 
-    install_pkgs xterm
+    install_pkgs \
+        dc \
+        fortune-mod \
+        ncal \
+        strace \
+        tv-fonts \
+        xterm
+
+    # todo: check flag?  these are dependencies, here largely
+    # for me playing with xscreensaver
+    install_pkgs \
+        intltool \
+        libcairo2-doc \
+        libdatrie-doc \
+        libgdk-pixbuf-xlib-2.0-dev \
+        libgirepository1.0-dev \
+        libgirepository1.0-doc \
+        libgl1-mesa-dev \
+        libgl1-mesa-glx \
+        libglib2.0-doc \
+        libglu1-mesa-dev \
+        libgraphite2-utils \
+        libgtk-3-doc devhelp \
+        libgtk2.0-dev \
+        libgtk2.0-doc \
+        libpam-dev \
+        libpango1.0-doc libthai-doc libxext-doc \
+        libsystemd-dev  \
+        libxpm-dev \
+        python-markdown-doc \
+        zsh-doc                 # leave this last
+fi
+
+# Fonts that I like for Emacs.
+if on_debian ; then
+    install_pkgs \
+        fonts-cmu \
+        fonts-hack-ttf \
+        usbutils
+fi
+
+if on_debian ; then
+    # UPS?
+    install_pkgs \
+        nut-client \
+        nut-server
 fi
 
 #############################################################################

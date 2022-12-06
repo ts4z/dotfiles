@@ -5,6 +5,10 @@
 # todo: make file list configurable and live in /etc or something
 #
 # todo: this is not smart w.r.t. log file vs stderr
+#
+# Note: To disable backing up a particular directory,
+#   chattr +d $location
+# based on the --nodump flag.
 
 set -eu
 set -o pipefail
@@ -90,17 +94,20 @@ if [ $# -ne 0 ]; then
 fi
 
 log "------------------"
-log "awaiting lock"
 (
     flock -n 9 || exit 1
 
-    log "have lock"
+    log "acquired lock"
 
     (clean_backups)
     ex=$?
     if [ "$ex" != 0 ]; then
         log "NOTE: exit-status $ex while removing backups"
     fi
+
+    target_file="$(uname -n)-$(date +%Y-%m-%d_%H-%M-%S)"
+
+    log "Creating archive: $target_file"
     
     # Be in /; that way we can create full-path archives (for
     # whatever archives we want to produce) without getting 
@@ -113,15 +120,15 @@ log "awaiting lock"
     else
         maybe "$tarsnap" -c \
 	      --nodump \
-	      -f "$(uname -n)-$(date +%Y-%m-%d_%H-%M-%S)" \
+	      -f "$target_file" \
               --exclude '*~' \
+              --exclude '.steam' \
+              --exclude '.cache' \
 	      home/tjs \
-              root/tarsnap-backup.sh \
-	      etc/sudoers.d/tjs \
+              local/etc/tarsnap-backup.sh \
 	      etc/update-motd.d \
 	      etc/ssh/ssh_config \
 	      etc/ssh/sshd_config \
-	      etc/rsnapshot.conf \
 	      etc/fstab
         
         ex=$?

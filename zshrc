@@ -149,7 +149,7 @@ for dir in \
  "$HOME"/go \
  "$HOME/.cargo" \
  /snap \
- /usr/lib/go-1.12 \
+ /opt/go \
  /usr/local \
  /usr/local/X11R6 \
  /usr/local/kde \
@@ -216,6 +216,21 @@ no-screensaver() {
             sleep 60
         done
     )
+}
+
+python() {
+    echo "zshrc: Use python2 or python3, this is ambiguous." 1>&2
+    echo "args:" "$@"
+    if command -v python3 2>/dev/null ; then
+        echo "zshrc: Running python3 on path." 1>&2
+        python3 "$@"
+    elif command -v python2 ; then
+        echo "zshrc: Running python2 on path." 1>&2
+        python2 "$@"
+    else
+        echo "No python installed. What year is this?" 1>&2
+        false
+    fi
 }
 
 alias brawl='brew update && brew upgrade && brew cleanup && brew cask outdated' 

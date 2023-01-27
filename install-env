@@ -173,6 +173,7 @@ if ! on_a_mac ; then
         libgtk-3-doc devhelp \
         libgtk2.0-dev \
         libgtk2.0-doc \
+        libnotify-bin \
         libpam-dev \
         libpango1.0-doc libthai-doc libxext-doc \
         libsystemd-dev  \

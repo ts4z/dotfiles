@@ -105,73 +105,51 @@ fi
 RPROMPT='%(3D.%(1d.~APRIL FOOLS~ .).)'
 FIGNORE=.svn:~:.git
 
-# Path slicing and dicing.  Remove stupid crap from the path (relative dirs,
-# but also nonexistant dirs and duplicates, since we probably just made a
-# bunch of those).  This is hard to do in Bourne shell, so I resort to
-# a perl hairball called whackpath.  If that can't be found, we don't.
-cleanpath ()
-{
-  for dir in "$HOME/cvs/bin" "$HOME/cvs-tjs/bin" ; do
-    if [ -x "${dir}/whackpath" ]; then
-      answer=`"${dir}/whackpath" "$@"`
-      if [ -n "$answer" ]; then
-	# success--output cleaned up PATH setting
-	echo "$answer"
-	return 0
-      fi
-      return 0
+# Rewrite PATH into the order I prefer.
+
+# Add these to back of path.
+path+=(/bin)
+path+=(/usr/sbin)
+path+=(/sbin)
+path+=(/usr/games)
+
+echo "manpath is $manpath"
+
+scanpaths=(
+        "$HOME"/go \
+        "/usr/lib/go-1.12" \
+        "$HOME" \
+        "$HOME"/local \
+        "$HOME"/opt/scala \
+        "$HOME"/go \
+        "$HOME/.cargo" \
+        /snap \
+        /opt/go \
+        /usr/local \
+        /usr/local/X11R6 \
+        /usr/local/kde \
+        /usr/games \
+        /usr \
+        /usr/X11R6 \
+        )
+
+# Scan the above list in reverse order.
+for dir in ${(Oa)scanpaths} ; do
+    # Add each interesting item to the front of the path.
+    if [ -d "${dir}/bin" ]; then
+        path=("${dir}/bin" $path)
     fi
-  done
-  # failed--output the input
-  echo "$@"
-}
-
-
-# Add extra crap to the back of the path.  Since I'm now using an
-# external perl script to make this work, I could conceivably do this
-# in the perl script instead, but this way it works even if perl is
-# hosed somehow.
-#
-
-for dir in \
- /usr/sbin \
- /usr/games \
- /sbin \
- ; do
-  PATH="$PATH:$dir"
-done
-for dir in \
- "$HOME"/go \
- "/usr/lib/go-1.12/bin" \
- "$HOME" \
- "$HOME"/local \
- "$HOME"/opt/scala \
- "$HOME"/go \
- "$HOME/.cargo" \
- /snap \
- /opt/go \
- /usr/local \
- /usr/local/X11R6 \
- /usr/local/kde \
- /usr/games \
- /bin \
- /usr \
- /usr/X11R6 \
- ; do
-  # duplicates are eliminated below
-  if [ -d "${dir}/bin" ]; then
-    PATH="$PATH:${dir}/bin"
-  fi
-  if [ -d "${dir}/share/man" ]; then
-    MANPATH="${MANPATH}:${dir}/share/man"
-  fi
-  if [ -d "${dir}/man" ]; then
-    MANPATH="${MANPATH}:${dir}/man"
-  fi
+    if [ -d "${dir}/share/man" ]; then
+        manpath+=("${dir}/share/man" $manpath)
+    fi
+    if [ -d "${dir}/man" ]; then
+        manpath+=("${dir}/man" $manpath)
+    fi
 done
 
-export PATH=`cleanpath "${PATH}"`
-export MANPATH=`cleanpath "${MANPATH}"`
+# Keep first occurrence, remove others.
+typeset -U path
+typeset -U manpath
 
 umask 22
 

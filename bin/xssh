@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec xterm -fg white -bg purple5 -cr orange -T "ssh $*" -e ssh "$@"
+exec xterm -fg white -bg purple4 -cr orange -T "ssh $*" -e ssh "$@"

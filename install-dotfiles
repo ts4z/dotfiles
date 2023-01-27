@@ -34,6 +34,7 @@ fi
 cd "${HOME}"
 # /bin/ls -1 | egrep -v '^(README.md|CVS|install-dotfiles)$' | sed 's/$/ \\/'
 for dotfile in \
+Xresources \
 bash_profile \
 bashrc \
 gdbinit \
@@ -92,7 +93,6 @@ for f in \
         mv ".$f" "${f}".old
         echo done.
     else
-        echo "none found."
+        echo "no old file found."
     fi
 done
-echo "done."

@@ -31,7 +31,7 @@ if [ -z "$cvsdir" ]; then
   exit 0
 fi
 
-if test ! -d ~/bin ; then
+if test -f ~/bin -a ! -d ~/bin ; then
     echo "WARNING: ~/bin exists but is not a directory!"
     exit 2
 fi

@@ -1,7 +1,9 @@
-# Xresources -*- fundamental -*-
+/* Xresources */
 
-# xterm, by default, uses non-scalable fonts which don't work well on modern
-# monitors.
+/*
+xterm, by default, uses non-scalable fonts which don't work well on modern
+monitors.
+*/
 
 xterm*faceName: Hack
 xterm*faceSize: 12

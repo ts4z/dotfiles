@@ -113,8 +113,6 @@ path+=(/usr/sbin)
 path+=(/sbin)
 path+=(/usr/games)
 
-echo "manpath is $manpath"
-
 scanpaths=(
         "$HOME"/go \
         "/usr/lib/go-1.12" \

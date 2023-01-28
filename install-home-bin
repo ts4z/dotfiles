@@ -39,8 +39,9 @@ fi
 cd "${HOME}"
 
 if test -d ~/bin ; then
-    echo "NOTE: ~/bin exists"
+    echo "already exists: ~/bin"
 else
+    echo "creating ~/bin"
     mkdir bin
 fi
 
@@ -55,7 +56,7 @@ for script_file in $(list_scripts) ; do
   echon "${script_file}: "
 
   # 0.  Check for override; ignore if so
-  if head -3 "$script_file" | grep -q "$save" ; then
+  if head -3 "${cvsdir}/bin/${script_file}" | grep -q "$save" ; then
       echo "exists, and is marked to keep; skip."
       continue
   fi

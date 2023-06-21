@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my $adds = 0;
+my $dels = 0;
+my $files = 0;
+my $chunks = 0;
+my $files = 0;
+
+for (<ARGV>) {
+    ++$files if /^diff/;
+    ++$chunks if /^@@/;
+    ++$adds if /^\+/;
+    ++$dels if /^-/;
+}
+
+print <<_EOF_
+$chunks chunksd in $files files
++ $adds
+- $dels
+_EOF_
+     ;
+
+exit 0;

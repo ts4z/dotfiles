@@ -1,6 +1,6 @@
 #
 # ts4z
-# hook for stiarting rsnapshot.
+# hook for starting rsnapshot.
 #
 
 0 */4 * * *         root /usr/bin/rsnapshot hourly

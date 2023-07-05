@@ -3,7 +3,7 @@
 # hook for starting rsnapshot.
 #
 
-0 */4 * * *         root /usr/bin/rsnapshot hourly
+0 * * * *         root /usr/bin/rsnapshot hourly
 
 50 23 * * *         root /usr/bin/rsnapshot daily
 

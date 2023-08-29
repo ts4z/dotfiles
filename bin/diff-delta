@@ -11,8 +11,8 @@ my $files = 0;
 for (<ARGV>) {
     ++$files if /^diff/;
     ++$chunks if /^@@/;
-    ++$adds if /^\+/;
-    ++$dels if /^-/;
+    ++$adds if /^\+[^+]/;
+    ++$dels if /^-[^-]/;
 }
 
 print <<_EOF_

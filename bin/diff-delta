@@ -6,7 +6,6 @@ my $adds = 0;
 my $dels = 0;
 my $files = 0;
 my $chunks = 0;
-my $files = 0;
 
 for (<ARGV>) {
     ++$files if /^diff/;

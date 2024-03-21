@@ -17,7 +17,6 @@ set -eu
 dryrun=''                     # if set, don't do anything, just pretend
 sw_aws=''                     # if set, install awscli and other AWS utilities
 sw_k8s=''                     # if set, install all the k8s stuff we know about
-sw_1password=''               # if set, & on mac, install 1password cask
 sw_help=''                    # if set, print help
 
 help() {
@@ -27,7 +26,6 @@ $0: slightly abstracted setup utility for my dev box
 Supposed to be idempotent.  May require passwords and other interaction.
 
 options:
--1 .... install 1password cask (Mac only)
 -8 .... install kubernetes stuff
 -a .... install awscli and other AWS utilities
 -h .... help
@@ -45,9 +43,6 @@ fi
 set -- $args
 for i; do
     case "$i" in
-	-1) sw_1password=1
-	    shift
-	    ;;
         -a) sw_aws=1
             shift
             ;;
@@ -82,10 +77,6 @@ inst_aws () {
     test -n "$sw_aws"
 }
 
-inst_1password() {
-    on_a_mac && test -n "$sw_1password"
-}
-
 # Feature test
 on_a_mac() {
     test "Darwin" = "$(uname -s)"
@@ -108,7 +99,7 @@ install_pkgs () {
     if on_debian ; then
         cmd sudo apt-get install "$@"
     elif on_a_mac ; then
-        cmd brew_install_pkgs "$@"
+        cmd brew install "$@"
     else
         echo "Local package manager unknown."
         exit 2
@@ -127,9 +118,11 @@ noecho_cmd () {
 }
 
 maybe_install_homebrew () {
-    if [ -x /usr/local/bin/brew ]; then
+    if [ -x /opt/homebrew/bin/brew ]; then
 	note 'brew is already installed; will just use it as-is.'
     else
+	echo "BROKEN"
+	exit 1
         # Don't use cmd, it does the wrong thing here with the nested Homebrew
         # install hack.
         # shellcheck disable=SC2016 # I'm doing that on purpose, see?
@@ -149,11 +142,11 @@ begin_section "the usual suspects"
 install_pkgs \
     curl \
     direnv \
-    finger \
     gnupg \
     ispell \
     jq \
     less \
+    pkg-config \
     shellcheck \
     tcsh \
     tree \
@@ -167,6 +160,7 @@ if ! on_a_mac ; then
 
     install_pkgs \
         dc \
+	finger \
         fortune-mod \
         ncal \
         strace \
@@ -264,10 +258,12 @@ fi
 begin_section "Emacs"
 
 if on_a_mac; then
+    # this isn't right
+    install_pkgs libgccgit gcc librsvg autoconf texinfo
     if [ -x /usr/local/bin/emacs ]; then
         note "emacs already installed; skipping"
     else
-        cmd brew install emacs --HEAD --with-cocoa --with-librsvg --with-imagemagick@6
+        cmd brew install emacs 
     fi
 
     if [ -d /usr/local/opt/emacs/Emacs.app ]; then
@@ -294,16 +290,8 @@ fi
 
 #############################################################################
 
-if inst_1password ; then
-    if on_a_mac ; then
-        brew cask install 1password
-    else
-        echo "I don't know how to install 1password here."
-    fi
-fi
-
 if on_a_mac ; then
-    brew cask install firefox
+    brew install firefox --cask
 fi
 
 begin_section "completed"

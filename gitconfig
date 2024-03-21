@@ -1,28 +1,36 @@
 # .gitconfig
 
+[push]
+        autoSetupRemote=true
+
 [core]
         excludesFile = ~/.git-global-ignore
 
 [user]
 	name = Tim Showalter
-	email = tjs@psaux.com
+	email = tim.showalter@closefactor.com
 
 [alias]
         # "all log"
         al = log --graph --all
+        amend = commit --amend --no-edit
         br = branch
         co = checkout
         du = diff origin/master
         freshen = !git commit --amend --date=`date +%s` --no-edit
         # Push BRanch to origin; set upstream of this branch to point to that one
+        mom = merge --no-edit origin/master
         pbr = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+        pdiff=diff -r HEAD^
         prune-remote=remote prune origin
+        # fig synonym
+        reword=commit --amend
         # "short log"
         sl = log --graph --all --oneline
         st = status
         up = pull --rebase
         # accomidate my p4 brain damage
-        sync = pull --rebase
+        sync = pull -p --rebase origin master
         # accomidate my G brain damage
         xl = log --graph --all --oneline
 

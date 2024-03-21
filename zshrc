@@ -83,13 +83,10 @@ set_prompt_git_vars ()
     fi
 }
 
-case "$(hostname -s)" in
-    *)
-        prompt_hostname='%m' ;;
-esac
+prompt_hostname='%m'
 
 reset_prompt() {
-    PROMPT="%1(j.[%j job%2(j.s.)] .)%B${prompt_nat}${prompt_hostname}%b %42<…<%~${prompt_git_branch}%<< %# "
+    PROMPT="%1(j.[%j job%2(j.s.)] .)%B${prompt_nat}%m%b %42<…<%~${prompt_git_branch}%<< %# "
 }
 
 if [ `id -u` != 0 ]; then
@@ -115,12 +112,13 @@ path+=(/usr/games)
 
 scanpaths=(
         "$HOME"/go \
-        "/usr/lib/go-1.12" \
         "$HOME" \
         "$HOME"/local \
         "$HOME"/opt/scala \
         "$HOME"/go \
         "$HOME/.cargo" \
+	/opt/homebrew \
+        /opt/homebrew/opt/postgresql@15 \
         /snap \
         /opt/go \
         /usr/local \
@@ -288,6 +286,83 @@ function nltab
     perl -pne 's/\\n/\n/g; s/\\t/\t/g; '
 }
 
+g4d_usage () {
+    cat 1>&2 <<EOF 
+g4d: a simulacrum of the real g4d command (because old habits die hard)
+
+Usage:
+        g4d
+                -- change to root directory in current sandbox
+        g4d <sandbox>
+                -- change to sandbox called <sandbox>
+EOF
+}
+
+# By personal convention, I keep work source code in ~/s.
+# This knowledge is baked in.
+g4d () {
+    wd=s
+    creat_dir=''
+    usage=''
+    args=$(getopt dfh $*)
+    if [ $? -ne 0 ]; then
+        g4d_usage
+        return 1
+    fi
+    eval set -- $args
+    while :; do
+        case "$1" in
+            -d)
+                echo "g4d: -d not yet supported"
+                return 1;;
+            -h)
+                usage=1
+                shift;;
+            -f)
+                creat_dir=1
+                shift;;
+            --)
+                shift
+                break;;
+            *)
+                echo 1>&2 "can't parse option '$1'"
+                return 1
+                ;;
+        esac
+    done
+
+    if [ -n "$usage" ]; then
+        g4d_usage
+        return 1
+    fi
+
+    if [ $# -gt 1 ]; then
+        g4d_usage
+        return 1
+    fi
+
+    if [ $# = 0 ]; then
+        # With no arguments, cd to the root of the sandbox.
+        # I suppose you can do this with sed, but the quoting is insane.
+        # Use temp vars here to help with readability (believe it or not).
+        nd=$(pwd | WD="$wd" perl -pe '$wd = "$ENV{WD}"; $h = $ENV{HOME}; <>;
+                 s:^$h/$wd/([^/]+).*$:$h/$wd/$1: or exit 1')
+        if [ $? != 0 ]; then
+            echo 1>&2 "g4d: not in sandbox"
+            return 1
+        fi
+        cd "$nd"
+        return 0
+    fi
+    
+    if [ -n "$creat_dir" ]; then
+        mkdir "$HOME/$wd/$1" || return false
+        echo 1>&2 "g4d: created dir, you'll have to git clone yourself"
+    fi
+
+    cd "$HOME/$wd/$1"
+}
+
 # oh, rmstar, how I've missed you
 set rmstar on
 
@@ -330,3 +405,15 @@ zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+[[ -s "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+
+export GCP_PROJECT_ID=$(gcloud config list --format="value(core.project)")
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

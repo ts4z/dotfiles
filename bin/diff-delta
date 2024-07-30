@@ -15,7 +15,7 @@ for (<ARGV>) {
 }
 
 print <<_EOF_
-$chunks chunksd in $files files
+$chunks chunks in $files files
 + $adds
 - $dels
 _EOF_

@@ -7,3 +7,4 @@
 .ccls-cache
 *.iml
 .idea
+settings.json

@@ -16,7 +16,7 @@
         amend = commit --amend --no-edit
         br = branch
         co = checkout
-        du = diff origin/master
+        du = !git diff origin/"$(git config --get init.defaultBranch)"
         freshen = !git commit --amend --date=`date +%s` --no-edit
         # Push BRanch to origin; set upstream of this branch to point to that one
         mom = merge --no-edit origin/master

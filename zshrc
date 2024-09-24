@@ -423,3 +423,6 @@ export PATH=$M2_HOME/bin:$PATH
 export M2_HOME=/Users/tshowalter/apache-maven-3.8.8
 export PATH=$M2_HOME/bin:$PATH
 export JAVA_HOME=/opt/homebrew/Cellar/openjdk@11/11.0.24/libexec/openjdk.jdk/Contents/Home
+
+# Created by `pipx` on 2024-09-04 19:59:13
+export PATH="$PATH:/Users/tshowalter/.local/bin"

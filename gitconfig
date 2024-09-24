@@ -10,13 +10,18 @@
 	name = Tim Showalter
 	email = tjs@psaux.com
 
+# default branch:
+#   git config --get init.defaultBranch
+# or:
+#   git rev-parse --abbrev-ref HEAD
+
 [alias]
         # "all log"
         al = log --graph --all
         amend = commit --amend --no-edit
         br = branch
         co = checkout
-        du = !git diff origin/"$(git config --get init.defaultBranch)"
+        du = diff origin/main
         freshen = !git commit --amend --date=`date +%s` --no-edit
         # Push BRanch to origin; set upstream of this branch to point to that one
         mom = merge --no-edit origin/master
@@ -25,12 +30,10 @@
         prune-remote=remote prune origin
         # fig synonym
         reword=commit --amend
-        # "short log"
-        sl = log --graph --all --oneline
         st = status
         up = pull --rebase
         # accomidate my p4 brain damage
-        sync = pull -p --rebase origin master
+        sync = !git pull -p --rebase origin $(git rev-parse --abbrev-ref HEAD)
         # accomidate my G brain damage
         xl = log --graph --all --oneline
 

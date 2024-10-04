@@ -24,7 +24,7 @@
         du = diff origin/main
         freshen = !git commit --amend --date=`date +%s` --no-edit
         # Push BRanch to origin; set upstream of this branch to point to that one
-        mom = merge --no-edit origin/master
+        mom = merge --no-edit origin/main
         pbr = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
         pdiff=diff -r HEAD^
         prune-remote=remote prune origin

@@ -1,11 +1,13 @@
 
-tjs     ALL = NOPASSWD: /usr/bin/apt install,\
+tjs     ALL = NOPASSWD: /usr/bin/apt autoremove,\
+			/usr/bin/apt upgrade -y,\
+			/usr/bin/apt-get autoremove,\
+			/usr/bin/apt install,\
+			/usr/bin/apt-get update,\
+			/usr/bin/apt-get upgrade -y,\
+			/usr/bin/apt-get upgrade,\
+			/usr/bin/do-release-upgrade,\
+                        /usr/bin/apt dist-upgrade,\
                         /usr/bin/apt update,\
                         /usr/bin/apt upgrade,\
-			/usr/bin/apt upgrade -y,\
-                        /usr/bin/apt dist-upgrade,\
-			/usr/bin/do-release-upgrade,\
-			/usr/bin/apt-get update,\
-			/usr/bin/apt-get upgrade,\
-			/usr/bin/apt-get upgrade -y,\
 			/sbin/reboot

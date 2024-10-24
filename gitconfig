@@ -46,3 +46,6 @@
 
 [github]
 	user = ts4z
+
+[push]
+	autoSetupRemote = true

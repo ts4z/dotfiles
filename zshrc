@@ -117,6 +117,7 @@ scanpaths=(
         "$HOME"/opt/scala \
         "$HOME"/go \
         "$HOME/.cargo" \
+        "$HOME/.local" \
 	/opt/homebrew \
         /opt/homebrew/opt/postgresql@15 \
         /snap \
@@ -220,10 +221,9 @@ alias shit="find . -maxdepth 1 -type f \( -name core -o -name \[0-9\]\*.core -o 
 alias deep-shit="find . -type f \( -name core -o -name \[0-9\]\*.core -o -name core.\*\[0-9\] \) -print -exec rm {} \;"
 alias clean="find . -maxdepth 1 \( -name \*~ \) -print -exec rm {} \;"
 alias deep-clean='find . -name \*~ -print -exec rm {} \;'
-alias tmuxa='tmux a || tmux'
 # trash both + and / as they don't cut and paste well.
-# not optimal, but pretty good.
-alias pwgen='dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64 | tr +/ __'
+# try _ and . for now.
+alias pwgen='dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64 | tr +/ _.'
 
 if ! which open >&/dev/null ; then
   alias open=xdg-open
@@ -236,6 +236,15 @@ screen () {
     echo "you meant tmux, right?"
 }
 alias em='emacsclient -c'
+
+# tmux
+alias tmuxa='tmux a || tmux'
+reagent() {
+    # grab environment from connected session
+    eval $(tmux show-env -s)
+}
+# do it once now, so closing & reopening session reattaches to current agent
+reagent
 
 # argh.  redhat %!^@#&.
 if alias rm 2>/dev/null ; then
@@ -254,8 +263,7 @@ autoload -U select-word-style
 select-word-style bash
 
 # from jflorenc
-function gn
-{
+gn() {
     start=`date +%s`
     "$@"
     end=`date +%s`
@@ -265,15 +273,13 @@ function gn
 
 # convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
 # with no args, just print the local time.
-function gmtime  
-{
+gmtime() {
     perl -we 'if (!@ARGV) { push @ARGV, time } map { print scalar(gmtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
 }
 
 # convert Unix time to ctime.  If time is huge, it's probably Java ms, fudge it.
 # with no args, just print the local time.
-function localtime
-{
+localtime() {
     perl -we 'if (!@ARGV) { push @ARGV, time } map { print scalar(localtime($_ > 2000000000 ? $_/1000 : $_)),"\n" } (@ARGV);' "$@"
 }
 
@@ -281,8 +287,7 @@ alias epochtime='date +%s'
 
 # mangle tabs and newline characters for ad-hoc pretty-printing
 
-function nltab
-{
+nltab() {
     perl -pne 's/\\n/\n/g; s/\\t/\t/g; '
 }
 
@@ -406,23 +411,8 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-[[ -s "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-
 #export GCP_PROJECT_ID=$(gcloud config list --format="value(core.project)")
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH=$M2_HOME/bin:$PATH
-export M2_HOME=/Users/tshowalter/apache-maven-3.8.8
-export PATH=$M2_HOME/bin:$PATH
-export M2_HOME=/Users/tshowalter/apache-maven-3.8.8
-export PATH=$M2_HOME/bin:$PATH
-export JAVA_HOME=/opt/homebrew/Cellar/openjdk@11/11.0.24/libexec/openjdk.jdk/Contents/Home
-
-# Created by `pipx` on 2024-09-04 19:59:13
-export PATH="$PATH:/Users/tshowalter/.local/bin"
